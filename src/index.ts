@@ -1,4 +1,5 @@
 import express, {Request, Response} from "express";
+import {randomErrorMiddleware} from "./middleware.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -39,14 +40,9 @@ app.get("/redirect", (req: Request, res: Response) => {
     res.redirect("/new-location");
 });
 
-app.get("/rand-timeout", (req: Request, res: Response) => {
-    const randomChance: boolean = Math.random() < 0.5;
-    // console.log('=randomChance', randomChance)
-    if (randomChance) {
-        res.status(500).send('=Server timed out');
-        return;
-    }
-    res.status(200).send({status: 200, message: '=rand-timeout successful'});
+app.use("/rand-error", randomErrorMiddleware);
+app.get("/rand-error", (req: Request, res: Response) => {
+    res.status(200).send({status: 200, message: '=rand-error successful'});
 })
 
 app.listen(port, () => {

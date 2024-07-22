@@ -28,6 +28,6 @@ GET localhost:3000/jsonp
 
 ###
 
-GET localhost:3000/rand-timeout
+GET localhost:3000/rand-error
 
 ###
