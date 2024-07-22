@@ -1,9 +1,13 @@
 import express, {Request, Response} from "express";
 import {randomErrorMiddleware} from "./middleware.js";
 import {jsonPayload, jsonString} from "./json.js";
+import {createAdminRouter} from "./admin.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const adminRouter = createAdminRouter();
+app.use('/admin', adminRouter);
 
 app.get("/", (req: Request, res: Response) => {
     // res.send("Express + TypeScript Server");
