@@ -39,3 +39,7 @@ GET localhost:3000/rand-error
 GET localhost:3000/admin/aaa
 
 ###
+
+GET localhost:3000/settings
+
+###

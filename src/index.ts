@@ -6,8 +6,31 @@ import {createAdminRouter} from "./admin.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
+type Settings = {
+    [key: string]: any;
+};
+const settings: Settings = {
+    version: 'v1',
+    quote: 'yep that',
+    // other settings...
+};
+
 const adminRouter = createAdminRouter();
 app.use('/admin', adminRouter);
+
+app.get('/settings', (req, res) => {
+    res.status(200).send(settings);
+});
+
+app.put('/settings', (req, res) => {
+    const { name, value } = req.body;
+    if (name in settings) {
+        settings[name] = value;
+        res.status(200).send({ message: 'Setting updated successfully' });
+    } else {
+        res.status(404).send({ message: 'Setting not found' });
+    }
+});
 
 app.get("/", (req: Request, res: Response) => {
     // res.send("Express + TypeScript Server");
