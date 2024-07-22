@@ -18,6 +18,22 @@ app.get("/bad-server", (req: Request, res: Response) => {
     res.status(500).send('no')
 });
 
+app.get("/error", (req: Request, res: Response, next: express.NextFunction) => {
+    throw new Error("Something broke!");
+});
+
+app.get("/json", (req: Request, res: Response) => {
+    res.json({ message: "Hello, World!" });
+});
+
+app.get("/jsonp", (req: Request, res: Response) => {
+    res.jsonp({ message: "Hello, World!" });
+});
+
+app.get("/redirect", (req: Request, res: Response) => {
+    res.redirect("/new-location");
+});
+
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
 });

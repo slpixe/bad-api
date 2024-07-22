@@ -15,3 +15,15 @@ GET localhost:3000/bad-client
 GET localhost:3000/bad-server
 
 ###
+
+GET localhost:3000/error
+
+###
+
+GET localhost:3000/json
+
+###
+
+GET localhost:3000/jsonp
+
+###
