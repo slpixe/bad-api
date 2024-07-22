@@ -24,6 +24,10 @@ GET localhost:3000/json
 
 ###
 
+#GET localhost:3000/json-string
+
+###
+
 GET localhost:3000/jsonp
 
 ###

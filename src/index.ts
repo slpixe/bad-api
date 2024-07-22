@@ -1,5 +1,6 @@
 import express, {Request, Response} from "express";
 import {randomErrorMiddleware} from "./middleware.js";
+import {jsonPayload, jsonString} from "./json.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -28,9 +29,16 @@ app.get("/error", (req: Request, res: Response, next: express.NextFunction) => {
     throw new Error("Something broke!");
 });
 
+// app.get("/json", (req: Request, res: Response) => {
+//     res.json({message: "Hello, World!"});
+// });
 app.get("/json", (req: Request, res: Response) => {
-    res.json({message: "Hello, World!"});
+    res.json(jsonPayload);
 });
+
+// app.get("/json-string", (req: Request, res: Response) => {
+//     res.json(jsonString);
+// });
 
 app.get("/jsonp", (req: Request, res: Response) => {
     res.jsonp({message: "Hello, World!"});
