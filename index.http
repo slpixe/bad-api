@@ -5,3 +5,13 @@
 ###
 
 GET localhost:3000
+
+###
+
+GET localhost:3000/bad-client
+
+###
+
+GET localhost:3000/bad-server
+
+###
