@@ -22,14 +22,15 @@ app.use(express.json());
 // };
 
 const settingsStore = new SettingsStore(initialSettings);
-const settings = settingsStore.getSettings();
-console.log("=start of app settings", settings);
+// const settings = settingsStore.getSettings();
+// console.log("=start of app settings", settings);
 
 const adminRouter = createAdminRouter();
 app.use('/admin', adminRouter);
 
 app.get('/settings', (req, res) => {
-    res.status(200).send(settings);
+    const latestSettings = settingsStore.getSettings();
+    res.status(200).send(latestSettings);
 });
 
 app.put('/settings', (req: Request, res: Response) => {
