@@ -38,8 +38,27 @@ GET localhost:3000/rand-error
 
 GET localhost:3000/admin/aaa
 
-###
-
+### GET settings
 GET localhost:3000/settings
+
+### PUT single setting
+PUT localhost:3000/settings
+Content-Type: application/json
+
+{
+  "name": "newKey",
+  "value": "newValue"
+}
+
+### PUT multiple setting
+PUT localhost:3000/settings
+Content-Type: application/json
+
+{
+  "settings": [
+    { "name": "newKeys1", "value": "newValues1" },
+    { "name": "newKeys2", "value": "newValues2" }
+  ]
+}
 
 ###
