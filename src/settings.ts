@@ -11,6 +11,7 @@ export class SettingsStore {
 
     getSettings(): Settings {
         return { ...this.settings };
+        // return this.settings;
     }
 
     updateSetting(name: string, value: any): void {
