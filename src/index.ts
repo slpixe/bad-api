@@ -30,34 +30,37 @@ app.use('/admin', adminRouter);
 
 app.get('/settings', (req, res) => {
     const latestSettings = settingsStore.getSettings();
-    res.status(200).send(latestSettings);
+    res.status(200).send({settings: latestSettings});
 });
 
 app.put('/settings', (req: Request, res: Response) => {
     console.log('=req.body', typeof req.body, req.body);
 
-    const { name, value, settings } = req.body;
+    const {name, value, settings} = req.body;
     console.log('=name, value, settings', name, value, settings);
 
     try {
         if (settings && Array.isArray(settings)) {
             // Update multiple settings
             settingsStore.updateSettings(settings);
-            res.status(200).json({ message: 'Settings updated successfully', settings: settingsStore.getSettings() });
+            res.status(200).json({message: 'Settings updated successfully', settings: settingsStore.getSettings()});
         } else if (name && value !== undefined) {
             // Update a single setting
             settingsStore.updateSetting(name, value);
-            res.status(200).json({ message: `Setting '${name}' updated successfully`, settings: settingsStore.getSettings() });
+            res.status(200).json({
+                message: `Setting '${name}' updated successfully`,
+                settings: settingsStore.getSettings()
+            });
         } else {
-            res.status(400).json({ message: 'Invalid request. Provide either a single setting or an array of settings.' });
+            res.status(400).json({message: 'Invalid request. Provide either a single setting or an array of settings.'});
         }
     } catch (error: unknown) {
-            if (error instanceof Error) {
-                res.status(400).send({ message: error.message });
-            } else {
-                res.status(400).send({ message: 'An unknown error occurred' });
-            }
+        if (error instanceof Error) {
+            res.status(400).send({message: error.message});
+        } else {
+            res.status(400).send({message: 'An unknown error occurred'});
         }
+    }
 
     // try {
     //     settingsStore.updateSetting(name, value);
