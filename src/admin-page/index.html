@@ -5,6 +5,16 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Admin page</h1>
+<h1>Admin page - Settings</h1>
+<form id="settingsForm">
+    <fieldset>
+        <legend>Delay</legend>
+        <div>
+            <label for="settingDelay">Delay (ms) (1000 = 1 second):</label>
+            <input type="range" id="settingDelay" name="delay" required min="0" max="3000" value="500">
+        </div>
+        <button type="submit">Update Setting</button>
+    </fieldset>
+</form>
 </body>
 </html>
