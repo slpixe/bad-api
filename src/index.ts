@@ -4,9 +4,19 @@ import {randomErrorMiddleware} from "./middleware.js";
 import {jsonPayload} from "./json.js";
 import {createAdminRouter} from "./admin/admin.js";
 import {initialSettings, SettingsStore} from "./settings.js";
+import {createServer} from "http";
+import {Server} from 'socket.io';
 
 const app = express();
 const port = process.env.PORT || 3000;
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:3000", // Allow requests from this origin
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
 
 // app.use(bodyParser.json()); // for parsing JSON bodies
 // Middleware to parse JSON bodies
@@ -74,6 +84,36 @@ app.put('/settings', (req: Request, res: Response) => {
     // }
 });
 
+const elementStates = {
+    slider1: 50,
+    slider2: 75,
+    checkbox1: true,
+    textInput1: 'Hello World'
+};
+
+io.on('connection', (socket) => {
+    console.log('=socket.io connected');
+
+    // Send initial state to the client
+    for (const [id, value] of Object.entries(elementStates)) {
+        socket.emit('elementUpdate', { id, value, type: typeof value });
+    }
+
+    socket.on('elementChanged', (data: { id: keyof typeof elementStates; value: any }) => {
+        console.log(`Element ${data.id} updated to ${data.value}`);
+
+        // Update the server state
+        elementStates[data.id] = data.value;
+
+        // Broadcast the new value to all clients
+        io.emit('elementUpdate', { id: data.id, value: data.value, type: typeof data.value });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('=socket.io disconnected');
+    });
+});
+
 app.get("/", (req: Request, res: Response) => {
     // res.send("Express + TypeScript Server");
     res.status(200).send('hmmm')
@@ -124,4 +164,8 @@ app.get("/rand-error", (req: Request, res: Response) => {
 
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
+});
+
+httpServer.listen(3001, () => {
+    console.log(`[server]: Server is running at http://localhost:3001`);
 });
