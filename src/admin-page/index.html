@@ -37,12 +37,29 @@
 
     // Example of updating the status indicator
     function updateStatusIndicator(id, isSuccess) {
-    const statusEl = document.getElementById(`${id}Status`);
-    if (statusEl) {
-        console.log('=aaa', id, isSuccess);
-        statusEl.textContent = isSuccess ? '✔️' : '❌';
+        const statusEl = document.getElementById(`${id}Status`);
+        if (statusEl) {
+            console.log('=aaa', id, isSuccess);
+            statusEl.textContent = isSuccess ? '✔️' : '❌';
+        }
     }
-}
+
+    // Check client and server values and update status indicators
+    function checkAndDisplayStatus() {
+        for (const element of elements) {
+            const clientValue = state[`${element.id}Client`];
+            const serverValue = state[`${element.id}Server`];
+            const statusEl = document.getElementById(`${element.id}Status`);
+
+            if(statusEl) {
+                if (clientValue !== null && clientValue === serverValue) {
+                    statusEl.textContent = '✔️'; // Values match
+                } else {
+                    statusEl.textContent = '❌'; // Values do not match
+                }
+            }
+        }
+    }
 
     // const socket = io();
     const socket = io('http://localhost:3001');
@@ -74,7 +91,8 @@
         const emitChange = debounce(() => {
             const value = element.type === 'checkbox' ? el.checked : el.value;
             state[`${element.id}Client`] = value; // Save the client-side value
-            socket.emit('elementChanged', { id: element.id, value });
+            // socket.emit('elementChanged', { id: element.id, value });
+            socket.emit('settingsChanged', { id: element.id, value });
         }, 300); // Adjust the delay as necessary
 
         el.addEventListener(element.event, emitChange);
@@ -93,30 +111,54 @@
     });
 
     // Listen for updates from server
-    socket.on('elementUpdate', (data) => {
-        const el = document.getElementById(data.id);
-        if (el) {
-            if (data.type === 'checkbox') {
-                el.checked = data.value;
-            } else {
-                el.value = data.value;
-                // Update display of networkDelay value from server update
-                // if (data.id === 'networkDelay') {
-                //     document.getElementById('networkDelayValue').textContent = data.value;
-                // }
-            }
+    // socket.on('elementUpdate', (data) => {
+    //     const el = document.getElementById(data.id);
+    //     if (el) {
+    //         if (data.type === 'checkbox') {
+    //             el.checked = data.value;
+    //         } else {
+    //             el.value = data.value;
+    //             // Update display of networkDelay value from server update
+    //             // if (data.id === 'networkDelay') {
+    //             //     document.getElementById('networkDelayValue').textContent = data.value;
+    //             // }
+    //         }
+    //
+    //         // Save the server-side value and compare it with the client-side value
+    //         state[`${data.id}Server`] = data.value;
+    //         if (state[`${data.id}Client`] !== null && state[`${data.id}Client`] === data.value) {
+    //             console.log(`${data.id} has been successfully updated on the server`);
+    //             // Here you can update the UI to reflect successful updates
+    //         }
+    //     }
+    //     const isSuccess = state[`${data.id}Client`] === data.value;
+    //     updateStatusIndicator(data.id, isSuccess);
+    //
+    //     console.log('=state', state);
+    // });
 
-            // Save the server-side value and compare it with the client-side value
-            state[`${data.id}Server`] = data.value;
-            if (state[`${data.id}Client`] !== null && state[`${data.id}Client`] === data.value) {
-                console.log(`${data.id} has been successfully updated on the server`);
-                // Here you can update the UI to reflect successful updates
+    // Listen for updates from server
+    socket.on('settingsUpdate', (updatedSettings) => {
+        // Update the state with server values
+        for (const [id, value] of Object.entries(updatedSettings)) {
+            state[`${id}Server`] = value;
+
+            // Update the UI elements with server values
+            const el = document.getElementById(id);
+            if (el) {
+                if (el.type === 'checkbox') {
+                    el.checked = value;
+                } else {
+                    el.value = value;
+                    if (id === 'networkDelay') {
+                        document.getElementById('networkDelayValue').textContent = value;
+                    }
+                }
             }
         }
-        const isSuccess = state[`${data.id}Client`] === data.value;
-        updateStatusIndicator(data.id, isSuccess);
 
-        console.log('=state', state);
+        // Check if client and server values match, and update status indicators
+        checkAndDisplayStatus();
     });
 </script>
 </body>
