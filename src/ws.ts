@@ -1,3 +1,5 @@
+// ws.ts
+
 /**
  * This file initializes a WebSocket server using Socket.IO. It handles
  * sending the initial state of the application to the client and updating
@@ -6,7 +8,6 @@
 
 import {Server as WsServer} from 'socket.io';
 import {Server} from 'http'
-// import {SettingsStore} from "./settings/settings.js";
 import {settingsStore} from "./settings/settings.js";
 
 type ElementStates = {
@@ -65,20 +66,13 @@ export function initializeWebSocket(httpServer: Server): void {
                 elementStates[data.id] = data.value as boolean;
             }
 
-            // const settingsStore = new SettingsStore();
-            // Example: Accessing settings
-            // const currentSettings = settingsStore.getSettings();
-            // console.log(currentSettings);
+            // Example: Updating multiple settings
+            // settingsStore.updateSettings([
+            //     { name: 'version', value: 'v2' },
+            //     { name: 'quote', value: 'new quote' }
+            // ]);
 
-// Example: Updating a setting
-//             settingsStore.updateSetting('networkDelay', 100);
-
-// Example: Updating multiple settings
-            settingsStore.updateSettings([
-                { name: 'version', value: 'v2' },
-                { name: 'quote', value: 'new quote' }
-            ]);
-
+            // Example: Updating a setting
             settingsStore.updateSetting(data.id, data.value);
             const newSettings = settingsStore.getSettings();
 
