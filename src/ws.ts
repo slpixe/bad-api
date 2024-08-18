@@ -1,4 +1,11 @@
-import {Server} from 'socket.io';
+/**
+ * This file initializes a WebSocket server using Socket.IO. It handles
+ * sending the initial state of the application to the client and updating
+ * the state when the client sends an 'elementChanged' event.
+ */
+
+import {Server as WsServer} from 'socket.io';
+import {Server} from 'http'
 
 type ElementStates = {
     slider1: number;
@@ -11,8 +18,8 @@ type ElementUpdate = {
     [K in keyof ElementStates]: { id: K; value: ElementStates[K] };
 }[keyof ElementStates]; // Creates a union type for all possible updates
 
-export function initializeWebSocket(httpServer: any) {
-    const io = new Server(httpServer, {
+export function initializeWebSocket(httpServer: Server): void {
+    const io = new WsServer(httpServer, {
         cors: {
             origin: process.env.CORS_ORIGIN || "http://localhost:3000",
             methods: ["GET", "POST"],
@@ -35,6 +42,11 @@ export function initializeWebSocket(httpServer: any) {
             socket.emit('elementUpdate', { id, value, type: typeof value });
         }
 
+        // Handle the 'disconnect' event more efficiently
+        socket.on('disconnect', () => {
+            console.log('=socket.io disconnected');
+        });
+
         socket.on('elementChanged', (data: ElementUpdate) => {
             console.log(`Element ${data.id} updated to ${data.value}`);
 
@@ -53,10 +65,6 @@ export function initializeWebSocket(httpServer: any) {
 
             // Broadcast the new value to all clients
             io.emit('elementUpdate', { id: data.id, value: data.value, type: typeof data.value });
-        });
-
-        socket.on('disconnect', () => {
-            console.log('=socket.io disconnected');
         });
     });
 }
