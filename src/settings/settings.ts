@@ -3,15 +3,29 @@
 type Settings = {
     version: string;
     quote: string;
+    networkDelay: number;
     // Add other specific settings as needed
     [key: string]: any;
 };
 
-export class SettingsStore {
-    private settings: Settings;
+class SettingsStore {
+    private static instance: SettingsStore;
+    private readonly settings: Settings;
 
-    constructor(initialSettings: Settings) {
+    // Private constructor to prevent direct instantiation
+    private constructor(initialSettings: Settings) {
         this.settings = { ...initialSettings };
+    }
+
+    /**
+     * Provides access to the singleton instance of the SettingsStore.
+     * Initializes the instance if it doesn't exist.
+     */
+    public static getInstance(instanceInitialSettings: Settings = initialSettings): SettingsStore {
+        if (!SettingsStore.instance) {
+            SettingsStore.instance = new SettingsStore(instanceInitialSettings);
+        }
+        return SettingsStore.instance;
     }
 
     /**
@@ -52,5 +66,9 @@ export class SettingsStore {
 export const initialSettings: Settings = {
     version: 'v1',
     quote: 'yep that',
+    networkDelay: 50,
     // other settings...
 };
+
+// Export the singleton instance for use across the application
+export const settingsStore = SettingsStore.getInstance(initialSettings);

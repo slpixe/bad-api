@@ -12,8 +12,8 @@
         <legend>Network Settings</legend>
         <div>
             <label for="networkDelay">Network Delay (seconds):</label>
-            <input type="range" id="networkDelay" name="networkDelay" required min="0" max="180" value="30">
-            <span id="networkDelayValue">30</span> seconds
+            <input type="range" id="networkDelay" name="networkDelay" required min="0" max="180">
+            <span id="networkDelayValue">?</span> seconds
         </div>
     </fieldset>
 </form>
@@ -57,11 +57,11 @@
         el.addEventListener(element.event, emitChange);
 
         // Update display of networkDelay value
-        if (element.id === 'networkDelay') {
-            el.addEventListener('input', () => {
-                document.getElementById('networkDelayValue').textContent = el.value;
-            });
-        }
+        // if (element.id === 'networkDelay') {
+        //     el.addEventListener('input', () => {
+        //         document.getElementById('networkDelayValue').textContent = el.value;
+        //     });
+        // }
     }
 
     // Initialize all elements to sync
