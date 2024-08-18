@@ -12,8 +12,9 @@
         <legend>Network Settings</legend>
         <div>
             <label for="networkDelay">Network Delay (seconds):</label>
-            <input type="range" id="networkDelay" name="networkDelay" required min="0" max="180">
+            <input type="range" id="networkDelay" name="networkDelay" required min="0" max="18000">
             <span id="networkDelayValue">?</span> seconds
+            <span id="networkDelayStatus"></span> <!-- Status indicator -->
         </div>
     </fieldset>
 </form>
@@ -34,8 +35,29 @@
         };
     }
 
+    // Example of updating the status indicator
+    function updateStatusIndicator(id, isSuccess) {
+    const statusEl = document.getElementById(`${id}Status`);
+    if (statusEl) {
+        console.log('=aaa', id, isSuccess);
+        statusEl.textContent = isSuccess ? '✔️' : '❌';
+    }
+}
+
     // const socket = io();
     const socket = io('http://localhost:3001');
+
+    // Track the client-side and server-side values
+    const state = {
+        networkDelayClient: null,
+        networkDelayServer: null,
+        slider2Client: null,
+        slider2Server: null,
+        checkbox1Client: null,
+        checkbox1Server: null,
+        textInput1Client: null,
+        textInput1Server: null,
+    };
 
     // Elements to sync
     const elements = [
@@ -51,6 +73,7 @@
 
         const emitChange = debounce(() => {
             const value = element.type === 'checkbox' ? el.checked : el.value;
+            state[`${element.id}Client`] = value; // Save the client-side value
             socket.emit('elementChanged', { id: element.id, value });
         }, 300); // Adjust the delay as necessary
 
@@ -78,11 +101,22 @@
             } else {
                 el.value = data.value;
                 // Update display of networkDelay value from server update
-                if (data.id === 'networkDelay') {
-                    document.getElementById('networkDelayValue').textContent = data.value;
-                }
+                // if (data.id === 'networkDelay') {
+                //     document.getElementById('networkDelayValue').textContent = data.value;
+                // }
+            }
+
+            // Save the server-side value and compare it with the client-side value
+            state[`${data.id}Server`] = data.value;
+            if (state[`${data.id}Client`] !== null && state[`${data.id}Client`] === data.value) {
+                console.log(`${data.id} has been successfully updated on the server`);
+                // Here you can update the UI to reflect successful updates
             }
         }
+        const isSuccess = state[`${data.id}Client`] === data.value;
+        updateStatusIndicator(data.id, isSuccess);
+
+        console.log('=state', state);
     });
 </script>
 </body>

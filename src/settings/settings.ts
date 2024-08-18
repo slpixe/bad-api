@@ -43,7 +43,7 @@ class SettingsStore {
      */
     updateSetting(name: string, value: any): void {
         if (!(name in this.settings)) {
-            throw new Error(`Setting '${name}' not found`);
+            //throw new Error(`Setting '${name}' not found`);
         }
 
         this.settings[name] = value;

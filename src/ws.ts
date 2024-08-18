@@ -15,6 +15,7 @@ type ElementStates = {
     slider2: number;
     checkbox1: boolean;
     textInput1: string;
+    networkDelay: number;
 };
 
 type ElementUpdate = {
@@ -34,7 +35,8 @@ export function initializeWebSocket(httpServer: Server): void {
         slider1: 50,
         slider2: 75,
         checkbox1: true,
-        textInput1: 'Hello World'
+        textInput1: 'Hello World',
+        networkDelay: settingsStore.getSettings().networkDelay,
     };
 
     io.on('connection', (socket) => {
@@ -76,8 +78,11 @@ export function initializeWebSocket(httpServer: Server): void {
             settingsStore.updateSetting(data.id, data.value);
             const newSettings = settingsStore.getSettings();
 
-            // Broadcast the new value to all clients
-            io.emit('elementUpdate', { id: data.id, value: data.value, type: typeof data.value });
+            // Broadcast all settings after update
+            for (const [id, value] of Object.entries(newSettings)) {
+                io.emit('elementUpdate', { id, value, type: typeof value });
+            }
+            // io.emit('elementUpdate', { id: data.id, value: data.value, type: typeof data.value });
         });
     });
 }
