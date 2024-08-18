@@ -5,11 +5,19 @@ import {settingsStore, initialSettings} from "./settings.js";
 const settingsRouter = express.Router();
 // const settingsStore = new SettingsStore(initialSettings);
 
-function handleError(res: Response, error: unknown) {
+export function handleExpressError(res: Response, error: unknown) {
     if (error instanceof Error) {
         res.status(400).json({message: error.message});
     } else {
         res.status(400).json({message: 'An unknown error occurred'});
+    }
+}
+
+export function handleError(error: unknown) {
+    if(error instanceof Error) {
+        console.error('Error:', error.message);
+    } else {
+        console.error('Error:', error);
     }
 }
 
@@ -40,7 +48,7 @@ settingsRouter.put('/', (req: Request, res: Response) => {
             res.status(400).json({message: 'Invalid request. Provide either a single setting or an array of settings.'});
         }
     } catch (error: unknown) {
-        handleError(res, error);
+        handleExpressError(res, error);
     }
 });
 

@@ -19,7 +19,6 @@
     </fieldset>
 </form>
 
-<input type="range" id="slider2" min="0" max="100">
 <input type="checkbox" id="checkbox1">
 <input type="text" id="textInput1">
 
@@ -65,51 +64,50 @@
     const socket = io('http://localhost:3001');
 
     // Track the client-side and server-side values
-    const state = {
-        networkDelayClient: null,
-        networkDelayServer: null,
-        slider2Client: null,
-        slider2Server: null,
-        checkbox1Client: null,
-        checkbox1Server: null,
-        textInput1Client: null,
-        textInput1Server: null,
-    };
+    // const state = {
+    //     networkDelayClient: null,
+    //     networkDelayServer: null,
+    //     checkbox1Client: null,
+    //     checkbox1Server: null,
+    //     textInput1Client: null,
+    //     textInput1Server: null,
+    // };
+
+    const state = {};
 
     // Elements to sync
     const elements = [
         { id: 'networkDelay', event: 'input', type: 'range' },
-        { id: 'slider2', event: 'input', type: 'range' },
         { id: 'checkbox1', event: 'change', type: 'checkbox' },
         { id: 'textInput1', event: 'input', type: 'text' }
     ];
 
-    // Function to sync element value with server
-    function syncElement(element) {
-        const el = document.getElementById(element.id);
+    // // Function to sync element value with server
+    // function syncElement(element) {
+    //     const el = document.getElementById(element.id);
+    //
+    //     const emitChange = debounce(() => {
+    //         const value = element.type === 'checkbox' ? el.checked : el.value;
+    //         state[`${element.id}Client`] = value; // Save the client-side value
+    //         // socket.emit('elementChanged', { id: element.id, value });
+    //         socket.emit('settingsChanged', { id: element.id, value });
+    //     }, 300); // Adjust the delay as necessary
+    //
+    //     el.addEventListener(element.event, emitChange);
+    // }
 
-        const emitChange = debounce(() => {
-            const value = element.type === 'checkbox' ? el.checked : el.value;
-            state[`${element.id}Client`] = value; // Save the client-side value
-            // socket.emit('elementChanged', { id: element.id, value });
-            socket.emit('settingsChanged', { id: element.id, value });
-        }, 300); // Adjust the delay as necessary
-
-        el.addEventListener(element.event, emitChange);
-    }
-
-    // Initialize all elements to sync
-    elements.forEach(element => {
-        syncElement(element);
-    });
+    // // Initialize all elements to sync
+    // elements.forEach(element => {
+    //     syncElement(element);
+    // });
 
     // Listen for updates from server
-    socket.on('settingsUpdate', (updatedSettings) => {
+    socket.on('settingsSync', (updatedSettings) => {
         // Update the state with server values
-
-        console.log('=settingsUpdate', updatedSettings);
+        console.log('=settingsSync', updatedSettings);
 
         for (const [id, value] of Object.entries(updatedSettings)) {
+            state[`${id}Client`] = value;
             state[`${id}Server`] = value;
 
             // Update the UI elements with server values
@@ -128,6 +126,37 @@
 
         // Check if client and server values match, and update status indicators
         checkAndDisplayStatus();
+    });
+
+    // Function to sync element value with server
+    function initElements(element) {
+        console.log('=initElements', element);
+        const el = document.getElementById(element.id);
+
+        const emitChange = debounce(() => {
+            console.log('=emitChange');
+            console.log('=old client state', state);
+            const value = element.type === 'checkbox' ? el.checked : el.value;
+            state[`${element.id}Client`] = value; // Update client-side value in state
+            console.log('=new client state', state);
+
+            // Emit all the updated client-side settings to the server
+            const clientSettings = {};
+            for (const key in state) {
+                if (key.endsWith('Client')) {
+                    const id = key.replace('Client', '');
+                    clientSettings[id] = state[key];
+                }
+            }
+            socket.emit('settingsSync', clientSettings);
+        }, 300); // Adjust the delay as necessary
+
+        el.addEventListener(element.event, emitChange);
+    }
+
+    // Initialize all elements to sync
+    elements.forEach(element => {
+        initElements(element);
     });
 </script>
 </body>

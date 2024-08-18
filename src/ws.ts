@@ -9,10 +9,9 @@
 import {Server as WsServer} from 'socket.io';
 import {Server} from 'http'
 import {settingsStore} from "./settings/settings.js";
+import {handleError, handleExpressError} from "./settings/settings-route.js";
 
 type ElementStates = {
-    slider1: number;
-    slider2: number;
     checkbox1: boolean;
     textInput1: string;
     networkDelay: number;
@@ -32,8 +31,6 @@ export function initializeWebSocket(httpServer: Server): void {
     });
 
     const elementStates: ElementStates = {
-        slider1: 50,
-        slider2: 75,
         checkbox1: true,
         textInput1: 'Hello World',
         networkDelay: settingsStore.getSettings().networkDelay,
@@ -49,7 +46,7 @@ export function initializeWebSocket(httpServer: Server): void {
 
         // Send all settings to the client on connection
         const allSettings = settingsStore.getSettings();
-        socket.emit('settingsUpdate', allSettings);
+        socket.emit('settingsSync', allSettings);
 
         // Handle the 'disconnect' event more efficiently
         socket.on('disconnect', () => {
@@ -89,15 +86,36 @@ export function initializeWebSocket(httpServer: Server): void {
         //     // io.emit('elementUpdate', { id: data.id, value: data.value, type: typeof data.value });
         // });
 
-        socket.on('settingsChanged', (data: { id: string, value: any }) => {
-            console.log(`Setting ${data.id} updated to ${data.value}`);
+        // socket.on('settingsChanged', (data: { id: string, value: any }) => {
+        //     console.log(`Setting ${data.id} updated to ${data.value}`);
+        //
+        //     // Update the setting in the settings store
+        //     settingsStore.updateSetting(data.id, data.value);
+        //
+        //     // Broadcast all settings to all clients
+        //     const updatedSettings = settingsStore.getSettings();
+        //     io.emit('settingsUpdate', updatedSettings);
+        // });
 
-            // Update the setting in the settings store
-            settingsStore.updateSetting(data.id, data.value);
+        // Handle 'settingsChanged' event from the client
+        socket.on('settingsSync', (updatedSettings) => {
+            console.log('Received settings from client:', updatedSettings);
 
-            // Broadcast all settings to all clients
-            const updatedSettings = settingsStore.getSettings();
-            io.emit('settingsUpdate', updatedSettings);
+            // Update the settings in the store
+            try {
+                settingsStore.updateSettings(Object.entries(updatedSettings).map(([name, value]) => ({name, value})));
+            } catch (error: unknown) {
+                handleError(error);
+                // if(error instance of Error) {
+                //     console.log('Error updating settings')
+                // }
+                // console.error('Error updating settings:', error.message);
+                // return;
+            }
+
+            // Broadcast the updated settings back to the client
+            const allSettings = settingsStore.getSettings();
+            io.emit('settingsSync', allSettings);
         });
     });
 }

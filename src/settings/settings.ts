@@ -66,7 +66,7 @@ class SettingsStore {
 export const initialSettings: Settings = {
     version: 'v1',
     quote: 'yep that',
-    networkDelay: 50,
+    networkDelay: 500,
     // other settings...
 };
 
