@@ -2,27 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Admin Page - Settings</title>
 </head>
 <body>
 <h1>Admin page - Settings</h1>
-<!--<form id="settingsForm">-->
-<!--    <fieldset>-->
-<!--        <legend>Delay</legend>-->
-<!--        <div>-->
-<!--            <label for="settingDelay">Delay (ms) (1000 = 1 second):</label>-->
-<!--            <input type="range" id="settingDelay" name="delay" required min="0" max="3000" value="500">-->
-<!--        </div>-->
-<!--        <button type="submit">Update Setting</button>-->
-<!--    </fieldset>-->
-<!--</form>-->
 
-<input type="range" id="slider1" min="0" max="100">
+<form id="settingsForm">
+    <fieldset>
+        <legend>Network Settings</legend>
+        <div>
+            <label for="networkDelay">Network Delay (seconds):</label>
+            <input type="range" id="networkDelay" name="networkDelay" required min="0" max="180" value="30">
+            <span id="networkDelayValue">30</span> seconds
+        </div>
+    </fieldset>
+</form>
+
 <input type="range" id="slider2" min="0" max="100">
 <input type="checkbox" id="checkbox1">
 <input type="text" id="textInput1">
 
-<!--<script src="/socket.io/socket.io.js"></script>-->
 <script src="http://localhost:3001/socket.io/socket.io.js"></script>
 <script>
     // Debounce function
@@ -40,7 +39,7 @@
 
     // Elements to sync
     const elements = [
-        { id: 'slider1', event: 'input', type: 'range' },
+        { id: 'networkDelay', event: 'input', type: 'range' },
         { id: 'slider2', event: 'input', type: 'range' },
         { id: 'checkbox1', event: 'change', type: 'checkbox' },
         { id: 'textInput1', event: 'input', type: 'text' }
@@ -56,6 +55,13 @@
         }, 300); // Adjust the delay as necessary
 
         el.addEventListener(element.event, emitChange);
+
+        // Update display of networkDelay value
+        if (element.id === 'networkDelay') {
+            el.addEventListener('input', () => {
+                document.getElementById('networkDelayValue').textContent = el.value;
+            });
+        }
     }
 
     // Initialize all elements to sync
@@ -71,6 +77,10 @@
                 el.checked = data.value;
             } else {
                 el.value = data.value;
+                // Update display of networkDelay value from server update
+                if (data.id === 'networkDelay') {
+                    document.getElementById('networkDelayValue').textContent = data.value;
+                }
             }
         }
     });
