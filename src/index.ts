@@ -2,7 +2,7 @@
 import express, {Request, Response} from "express";
 import {randomErrorMiddleware} from "./middleware.js";
 import {jsonPayload} from "./json.js";
-import {createAdminRouter} from "./admin/admin.js";
+import {adminRouter} from "./admin/admin-route.js";
 import {createServer} from "http";
 import {initializeWebSocket} from "./ws.js";
 import {settingsRouter} from "./settings/settings-route.js";
@@ -24,10 +24,7 @@ function handleError(res: Response, error: unknown) {
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-const adminRouter = createAdminRouter();
 app.use('/admin', adminRouter);
-
-// Use the settings router
 app.use('/settings', settingsRouter);
 
 app.get("/", (req: Request, res: Response) => {
