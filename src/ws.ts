@@ -1,5 +1,4 @@
 import {Server} from 'socket.io';
-// import {ElementStates, ElementUpdate} from './your-main-file'; // Adjust the import path accordingly
 
 type ElementStates = {
     slider1: number;
@@ -40,7 +39,17 @@ export function initializeWebSocket(httpServer: any) {
             console.log(`Element ${data.id} updated to ${data.value}`);
 
             // Update the server state
-            elementStates[data.id] = data.value as never;
+            if (typeof data.value === 'string') {
+                elementStates[data.id] = data.value as string;
+            }
+
+            if(typeof data.value === 'number') {
+                elementStates[data.id] = data.value as number;
+            }
+
+            if(typeof data.value === 'boolean') {
+                elementStates[data.id] = data.value as boolean;
+            }
 
             // Broadcast the new value to all clients
             io.emit('elementUpdate', { id: data.id, value: data.value, type: typeof data.value });
