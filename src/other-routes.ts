@@ -2,13 +2,9 @@ import express, {Request, Response} from "express";
 import {jsonPayload} from "./json.js";
 import {randomErrorMiddleware} from "./middleware.js";
 import {networkDelayMiddleware} from "./middleware/networkDelay.js";
+import {settingsStore} from "./settings/settings.js";
 
 export const otherRoutes = express.Router();
-
-// otherRoutes.use((req, res, next) => {
-//     console.log('===Time:', Date.now())
-//     next()
-// })
 
 otherRoutes.use(networkDelayMiddleware());
 

@@ -1,19 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-
-// export const networkDelayMiddleware = (ms?: number) => {
-//     return (req: Request, res: Response, next: NextFunction) => {
-//         setTimeout(() => {
-//             next();
-//         }, ms);
-//     };
-// };
+import {settingsStore} from "../settings/settings.js";
 
 export const networkDelayMiddleware = () => {
     return (req: Request, res: Response, next: NextFunction) => {
-        console.log('=networkDelayMiddleware - start', 2500);
+        const delayMS = settingsStore.getSettings().networkDelay;
+        console.log('=networkDelayMiddleware - start', delayMS);
         setTimeout(() => {
-            console.log('=networkDelayMiddleware - finished', 2500);
+            console.log('=networkDelayMiddleware - finished', delayMS);
             next();
-        }, 2500);
+        }, delayMS);
     };
 };
