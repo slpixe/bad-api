@@ -18,9 +18,9 @@ type ElementStates = {
     networkDelay: number;
 };
 
-type ElementUpdate = {
-    [K in keyof ElementStates]: { id: K; value: ElementStates[K] };
-}[keyof ElementStates]; // Creates a union type for all possible updates
+// type ElementUpdate = {
+//     [K in keyof ElementStates]: { id: K; value: ElementStates[K] };
+// }[keyof ElementStates]; // Creates a union type for all possible updates
 
 export function initializeWebSocket(httpServer: Server): void {
     const io = new WsServer(httpServer, {

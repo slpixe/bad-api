@@ -35,14 +35,14 @@
         };
     }
 
-    // Example of updating the status indicator
-    function updateStatusIndicator(id, isSuccess) {
-        const statusEl = document.getElementById(`${id}Status`);
-        if (statusEl) {
-            console.log('=aaa', id, isSuccess);
-            statusEl.textContent = isSuccess ? '✔️' : '❌';
-        }
-    }
+    // // Example of updating the status indicator
+    // function updateStatusIndicator(id, isSuccess) {
+    //     const statusEl = document.getElementById(`${id}Status`);
+    //     if (statusEl) {
+    //         console.log('=aaa', id, isSuccess);
+    //         statusEl.textContent = isSuccess ? '✔️' : '❌';
+    //     }
+    // }
 
     // Check client and server values and update status indicators
     function checkAndDisplayStatus() {
@@ -96,13 +96,6 @@
         }, 300); // Adjust the delay as necessary
 
         el.addEventListener(element.event, emitChange);
-
-        // Update display of networkDelay value
-        // if (element.id === 'networkDelay') {
-        //     el.addEventListener('input', () => {
-        //         document.getElementById('networkDelayValue').textContent = el.value;
-        //     });
-        // }
     }
 
     // Initialize all elements to sync
@@ -111,35 +104,11 @@
     });
 
     // Listen for updates from server
-    // socket.on('elementUpdate', (data) => {
-    //     const el = document.getElementById(data.id);
-    //     if (el) {
-    //         if (data.type === 'checkbox') {
-    //             el.checked = data.value;
-    //         } else {
-    //             el.value = data.value;
-    //             // Update display of networkDelay value from server update
-    //             // if (data.id === 'networkDelay') {
-    //             //     document.getElementById('networkDelayValue').textContent = data.value;
-    //             // }
-    //         }
-    //
-    //         // Save the server-side value and compare it with the client-side value
-    //         state[`${data.id}Server`] = data.value;
-    //         if (state[`${data.id}Client`] !== null && state[`${data.id}Client`] === data.value) {
-    //             console.log(`${data.id} has been successfully updated on the server`);
-    //             // Here you can update the UI to reflect successful updates
-    //         }
-    //     }
-    //     const isSuccess = state[`${data.id}Client`] === data.value;
-    //     updateStatusIndicator(data.id, isSuccess);
-    //
-    //     console.log('=state', state);
-    // });
-
-    // Listen for updates from server
     socket.on('settingsUpdate', (updatedSettings) => {
         // Update the state with server values
+
+        console.log('=settingsUpdate', updatedSettings);
+
         for (const [id, value] of Object.entries(updatedSettings)) {
             state[`${id}Server`] = value;
 
