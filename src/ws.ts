@@ -9,7 +9,7 @@
 import {Server as WsServer} from 'socket.io';
 import {Server} from 'http'
 import {settingsStore} from "./settings/settings.js";
-import {handleError, handleExpressError} from "./settings/settings-route.js";
+import {handleError} from "./settings/settings-route.js";
 
 type ElementStates = {
     checkbox1: boolean;
@@ -106,16 +106,13 @@ export function initializeWebSocket(httpServer: Server): void {
                 settingsStore.updateSettings(Object.entries(updatedSettings).map(([name, value]) => ({name, value})));
             } catch (error: unknown) {
                 handleError(error);
-                // if(error instance of Error) {
-                //     console.log('Error updating settings')
-                // }
-                // console.error('Error updating settings:', error.message);
-                // return;
             }
 
             // Broadcast the updated settings back to the client
             const allSettings = settingsStore.getSettings();
-            io.emit('settingsSync', allSettings);
+            setTimeout(() => {
+                io.emit('settingsSync', allSettings);
+            }, 2000);
         });
     });
 }

@@ -52,7 +52,7 @@
 
             if(statusEl) {
                 if (clientValue !== null && clientValue === serverValue) {
-                    statusEl.textContent = '✔️'; // Values match
+                    statusEl.textContent = '✔️️'; // Values match
                 } else {
                     statusEl.textContent = '❌'; // Values do not match
                 }
@@ -139,6 +139,7 @@
             const value = element.type === 'checkbox' ? el.checked : el.value;
             state[`${element.id}Client`] = value; // Update client-side value in state
             console.log('=new client state', state);
+            checkAndDisplayStatus();
 
             // Emit all the updated client-side settings to the server
             const clientSettings = {};
