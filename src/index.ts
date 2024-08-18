@@ -7,16 +7,35 @@ import {initialSettings, SettingsStore} from "./settings.js";
 import {createServer} from "http";
 import {Server} from 'socket.io';
 
+type ElementStates = {
+    slider1: number;
+    slider2: number;
+    checkbox1: boolean;
+    textInput1: string;
+};
+
+type ElementUpdate = {
+    [K in keyof ElementStates]: { id: K; value: ElementStates[K] };
+}[keyof ElementStates]; // Creates a union type for all possible updates
+
 const app = express();
 const port = process.env.PORT || 3000;
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000", // Allow requests from this origin
+        origin: process.env.CORS_ORIGIN || "http://localhost:3000", // Allow requests from this origin
         methods: ["GET", "POST"],
         credentials: true
     }
 });
+
+function handleError(res: Response, error: unknown) {
+    if (error instanceof Error) {
+        res.status(400).json({message: error.message});
+    } else {
+        res.status(400).json({message: 'An unknown error occurred'});
+    }
+}
 
 // app.use(bodyParser.json()); // for parsing JSON bodies
 // Middleware to parse JSON bodies
@@ -65,11 +84,7 @@ app.put('/settings', (req: Request, res: Response) => {
             res.status(400).json({message: 'Invalid request. Provide either a single setting or an array of settings.'});
         }
     } catch (error: unknown) {
-        if (error instanceof Error) {
-            res.status(400).send({message: error.message});
-        } else {
-            res.status(400).send({message: 'An unknown error occurred'});
-        }
+        handleError(res, error);
     }
 
     // try {
@@ -84,7 +99,7 @@ app.put('/settings', (req: Request, res: Response) => {
     // }
 });
 
-const elementStates = {
+const elementStates: ElementStates = {
     slider1: 50,
     slider2: 75,
     checkbox1: true,
@@ -99,7 +114,7 @@ io.on('connection', (socket) => {
         socket.emit('elementUpdate', { id, value, type: typeof value });
     }
 
-    socket.on('elementChanged', (data: { id: keyof typeof elementStates; value: any }) => {
+    socket.on('elementChanged', (data: ElementUpdate) => {
         console.log(`Element ${data.id} updated to ${data.value}`);
 
         // Update the server state
@@ -113,6 +128,7 @@ io.on('connection', (socket) => {
         console.log('=socket.io disconnected');
     });
 });
+
 
 app.get("/", (req: Request, res: Response) => {
     // res.send("Express + TypeScript Server");
