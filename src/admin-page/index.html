@@ -10,9 +10,10 @@
 <form id="settingsForm">
     <fieldset>
         <legend>Network Settings</legend>
-        <div>
+        <div style="display: flex;">
             <label for="networkDelay">Network Delay (seconds):</label>
-            <input type="range" id="networkDelay" name="networkDelay" required min="0" max="18000">
+            <input style="flex-grow: 1;" type="range" id="networkDelay" name="networkDelay" required min="0"
+                   max="45000">
             <span id="networkDelayValue">?</span> seconds
             <span id="networkDelayStatus"></span> <!-- Status indicator -->
         </div>
@@ -27,11 +28,16 @@
     // Debounce function
     function debounce(func, delay) {
         let timeout;
-        return function(...args) {
+        return function (...args) {
             const context = this;
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(context, args), delay);
         };
+    }
+
+    function formatMillisecondsToSeconds(ms) {
+        return (ms / 1000).toFixed(2)
+        // document.getElementById('networkDelayValue').innerText = seconds;
     }
 
     // // Example of updating the status indicator
@@ -50,12 +56,16 @@
             const serverValue = state[`${element.id}Server`];
             const statusEl = document.getElementById(`${element.id}Status`);
 
-            if(statusEl) {
+            if (statusEl) {
                 if (clientValue !== null && clientValue === serverValue) {
                     statusEl.textContent = '✔️️'; // Values match
                 } else {
                     statusEl.textContent = '❌'; // Values do not match
                 }
+            }
+
+            if (element.id === 'networkDelay') {
+                document.getElementById('networkDelayValue').textContent = formatMillisecondsToSeconds(state[`${element.id}Client`]);
             }
         }
     }
@@ -77,9 +87,9 @@
 
     // Elements to sync
     const elements = [
-        { id: 'networkDelay', event: 'input', type: 'range' },
-        { id: 'checkbox1', event: 'change', type: 'checkbox' },
-        { id: 'textInput1', event: 'input', type: 'text' }
+        {id: 'networkDelay', event: 'input', type: 'range'},
+        {id: 'checkbox1', event: 'change', type: 'checkbox'},
+        {id: 'textInput1', event: 'input', type: 'text'}
     ];
 
     // // Function to sync element value with server
@@ -117,9 +127,9 @@
                     el.checked = value;
                 } else {
                     el.value = value;
-                    if (id === 'networkDelay') {
-                        document.getElementById('networkDelayValue').textContent = value;
-                    }
+                    // if (id === 'networkDelay') {
+                    //     document.getElementById('networkDelayValue').textContent = value;
+                    // }
                 }
             }
         }

@@ -112,7 +112,7 @@ export function initializeWebSocket(httpServer: Server): void {
             const allSettings = settingsStore.getSettings();
             setTimeout(() => {
                 io.emit('settingsSync', allSettings);
-            }, 2000);
+            }, 500);
         });
     });
 }
