@@ -1,7 +1,5 @@
 // index.ts
-import express, {Request, Response} from "express";
-import {randomErrorMiddleware} from "./middleware.js";
-import {jsonPayload} from "./json.js";
+import express from "express";
 import {adminRouter} from "./admin/admin-route.js";
 import {createServer} from "http";
 import {initializeWebSocket} from "./ws.js";
