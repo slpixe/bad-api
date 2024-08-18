@@ -2,7 +2,7 @@
 import express, {Request, Response} from "express";
 import {randomErrorMiddleware} from "./middleware.js";
 import {jsonPayload} from "./json.js";
-import {createAdminRouter} from "./admin.js";
+import {createAdminRouter} from "./admin/admin.js";
 import {initialSettings, SettingsStore} from "./settings.js";
 
 const app = express();

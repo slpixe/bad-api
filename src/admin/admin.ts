@@ -4,6 +4,8 @@ import express from "express";
 export const createAdminRouter = () => {
     const adminRouter = express.Router();
 
+    adminRouter.use('/', express.static('admin-page'))
+
     adminRouter.get('/aaa', (req, res) => {
         res.status(200).send('Admin!');
     });
