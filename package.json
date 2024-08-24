@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsx": "tsx ./src/index.ts",
-    "tsx:watch": "tsx watch ./src/index.ts"
+    "tsx:watch": "tsx watch ./src/index.ts",
+    "format:dry": "biome format ./src",
+    "format:write": "biome format --write ./src"
   },
   "author": "",
   "license": "ISC",
