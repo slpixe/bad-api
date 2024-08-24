@@ -1,9 +1,8 @@
 // settings/settings-route.ts
-import express, {Request, Response} from "express";
-import {settingsStore, initialSettings} from "./settings.js";
+import express, {type Request, type Response} from "express";
+import {settingsStore} from "./settings.js";
 
 const settingsRouter = express.Router();
-// const settingsStore = new SettingsStore(initialSettings);
 
 export function handleExpressError(res: Response, error: unknown) {
     if (error instanceof Error) {
