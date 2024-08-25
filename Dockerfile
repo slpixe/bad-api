@@ -43,6 +43,10 @@ FROM base
 COPY --from=build /app/dist /app/dist
 COPY --from=build /app/node_modules /app/node_modules
 
+# Copy the package.json file to the final image
+COPY package.json ./
+
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 CMD [ "node", "dist/index.js" ]
+#CMD ["sh"]
