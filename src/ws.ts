@@ -98,26 +98,29 @@ export function initializeWebSocket(httpServer: Server): void {
 		// });
 
 		// Handle 'settingsChanged' event from the client
-		socket.on("settingsSync", (updatedSettings: { [key: string]: string | number }) => {
-			console.log("Received settings from client:", updatedSettings);
+		socket.on(
+			"settingsSync",
+			(updatedSettings: { [key: string]: string | number }) => {
+				console.log("Received settings from client:", updatedSettings);
 
-			// Update the settings in the store
-			try {
-				settingsStore.updateSettings(
-					Object.entries(updatedSettings).map(([name, value]) => ({
-						name,
-						value,
-					})),
-				);
-			} catch (error: unknown) {
-				handleError(error);
-			}
+				// Update the settings in the store
+				try {
+					settingsStore.updateSettings(
+						Object.entries(updatedSettings).map(([name, value]) => ({
+							name,
+							value,
+						})),
+					);
+				} catch (error: unknown) {
+					handleError(error);
+				}
 
-			// Broadcast the updated settings back to the client
-			const allSettings = settingsStore.getSettings();
-			setTimeout(() => {
-				io.emit("settingsSync", allSettings);
-			}, 500);
-		});
+				// Broadcast the updated settings back to the client
+				const allSettings = settingsStore.getSettings();
+				setTimeout(() => {
+					io.emit("settingsSync", allSettings);
+				}, 500);
+			},
+		);
 	});
 }
