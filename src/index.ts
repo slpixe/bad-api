@@ -1,6 +1,6 @@
 // index.ts
 
-import { createServer } from "http";
+import { createServer } from "node:http";
 import express from "express";
 import { adminRouter } from "./admin/admin-route.js";
 import { otherRoutes } from "./other-routes.js";
@@ -25,5 +25,5 @@ app.listen(port, () => {
 });
 
 httpServer.listen(3001, () => {
-	console.log(`[server]: Server is running at http://localhost:3001`);
+	console.log("[server]: Server is running at http://localhost:3001");
 });
