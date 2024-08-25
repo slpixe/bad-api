@@ -20,6 +20,9 @@ importers:
       socket.io:
         specifier: ^4.7.5
         version: 4.7.5
+      typescript:
+        specifier: ^5.5.3
+        version: 5.5.3
       url:
         specifier: ^0.11.4
         version: 0.11.4
@@ -36,9 +39,6 @@ importers:
       tsx:
         specifier: ^4.16.2
         version: 4.16.2
-      typescript:
-        specifier: ^5.5.3
-        version: 5.5.3
 
 packages:
 
