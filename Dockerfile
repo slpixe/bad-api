@@ -46,7 +46,12 @@ COPY --from=build /app/node_modules /app/node_modules
 # Copy the package.json file to the final image
 COPY package.json ./
 
-# Start the server by default, this can be overwritten at runtime
+# Copy the public folder directly to the container
+COPY public /app/public
+
+# Expose both ports 3000 and 3001
 EXPOSE 3000
+EXPOSE 3001
+
 CMD [ "node", "dist/index.js" ]
 #CMD ["sh"]
