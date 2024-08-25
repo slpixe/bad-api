@@ -5,14 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsx": "tsx ./src/index.ts",
-    "tsx:watch": "tsx watch ./src/index.ts",
+    "dev": "tsx ./src/index.ts",
+    "dev:watch": "tsx watch ./src/index.ts",
     "format:dry": "biome format ./src",
     "format:write": "biome format --write ./src",
     "lint:dry": "biome lint ./src",
     "lint:write": "biome lint --write ./src",
     "biome:formatlint": "biome check ./src",
-    "biome:formatlint:write": "biome check --write ./src"
+    "biome:formatlint:write": "biome check --write ./src",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "author": "",
   "license": "ISC",

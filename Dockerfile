@@ -31,13 +31,16 @@ RUN pnpm install --frozen-lockfile
 # Copy application code
 COPY --link . .
 
+# Build the TypeScript code
+RUN pnpm run build
 
 # Final stage for app image
 FROM base
 
 # Copy built application
-COPY --from=build /app /app
+COPY --from=build /app/dist /app/dist
+COPY --from=build /app/node_modules /app/node_modules
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "node", "index.js" ]
+CMD [ "node", "dist/index.js" ]
