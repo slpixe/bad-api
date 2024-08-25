@@ -35,12 +35,10 @@ settingsRouter.put("/", (req: Request, res: Response) => {
 		if (settings && Array.isArray(settings)) {
 			// Update multiple settings
 			settingsStore.updateSettings(settings);
-			res
-				.status(200)
-				.json({
-					message: "Settings updated successfully",
-					settings: settingsStore.getSettings(),
-				});
+			res.status(200).json({
+				message: "Settings updated successfully",
+				settings: settingsStore.getSettings(),
+			});
 		} else if (name && value !== undefined) {
 			// Update a single setting
 			settingsStore.updateSetting(name, value);
@@ -49,12 +47,10 @@ settingsRouter.put("/", (req: Request, res: Response) => {
 				settings: settingsStore.getSettings(),
 			});
 		} else {
-			res
-				.status(400)
-				.json({
-					message:
-						"Invalid request. Provide either a single setting or an array of settings.",
-				});
+			res.status(400).json({
+				message:
+					"Invalid request. Provide either a single setting or an array of settings.",
+			});
 		}
 	} catch (error: unknown) {
 		handleExpressError(res, error);

@@ -1,10 +1,11 @@
 // index.ts
+
+import { createServer } from "http";
 import express from "express";
-import {adminRouter} from "./admin/admin-route.js";
-import {createServer} from "http";
-import {initializeWebSocket} from "./ws.js";
-import {settingsRouter} from "./settings/settings-route.js";
-import {otherRoutes} from "./other-routes.js";
+import { adminRouter } from "./admin/admin-route.js";
+import { otherRoutes } from "./other-routes.js";
+import { settingsRouter } from "./settings/settings-route.js";
+import { initializeWebSocket } from "./ws.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,14 +16,14 @@ initializeWebSocket(httpServer);
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-app.use('/admin', adminRouter);
-app.use('/settings', settingsRouter);
-app.use('/', otherRoutes);
+app.use("/admin", adminRouter);
+app.use("/settings", settingsRouter);
+app.use("/", otherRoutes);
 
 app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
+	console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
 httpServer.listen(3001, () => {
-    console.log(`[server]: Server is running at http://localhost:3001`);
+	console.log(`[server]: Server is running at http://localhost:3001`);
 });
