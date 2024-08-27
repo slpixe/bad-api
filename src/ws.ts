@@ -25,6 +25,7 @@ export function initializeWebSocket(httpServer: Server): void {
 	const io = new WsServer(httpServer, {
 		cors: {
 			origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+			// origin: "/ws",
 			methods: ["GET", "POST"],
 			credentials: true,
 		},
