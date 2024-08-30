@@ -51,7 +51,7 @@ COPY public /app/public
 
 # Expose both ports 3000 and 3001
 EXPOSE 3000
-EXPOSE 3001
+#EXPOSE 3001
 
 CMD [ "node", "dist/index.js" ]
 #CMD ["sh"]

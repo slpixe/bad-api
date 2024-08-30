@@ -1,11 +1,11 @@
 // index.ts
 
-import {createServer} from "node:http";
+import { createServer } from "node:http";
 import express from "express";
-import {adminRouter} from "./admin/admin-route.js";
-import {otherRoutes} from "./other-routes.js";
-import {settingsRouter} from "./settings/settings-route.js";
-import {initializeWebSocket} from "./ws.js";
+import { adminRouter } from "./admin/admin-route.js";
+import { otherRoutes } from "./other-routes.js";
+import { settingsRouter } from "./settings/settings-route.js";
+import { initializeWebSocket } from "./ws.js";
 
 const app = express();
 const port = process.env.PORT || 3000;

@@ -25,24 +25,24 @@ export function initializeWebSocket(httpServer: Server): void {
 
 		//
 		// Respond to connection
-		socket.emit('welcome', { message: 'Welcome to the WebSocket server!' });
+		socket.emit("welcome", { message: "Welcome to the WebSocket server!" });
 
 		// Listen for a simple message event
-		socket.on('message', (data) => {
-			console.log('Received message:', data);
+		socket.on("message", (data) => {
+			console.log("Received message:", data);
 			// Respond back to the client
-			socket.emit('message_response', { message: 'Message received', data });
+			socket.emit("message_response", { message: "Message received", data });
 		});
 
 		// Disconnect event
-		socket.on('disconnect', () => {
-			console.log('User disconnected');
+		socket.on("disconnect", () => {
+			console.log("User disconnected");
 		});
 		//
 
-		socket.on('message', (msg) => {
-			console.log('Message received:', msg);
-			socket.emit('response', 'Message received on the server!');
+		socket.on("message", (msg) => {
+			console.log("Message received:", msg);
+			socket.emit("response", "Message received on the server!");
 		});
 
 		// Send all settings to the client on connection

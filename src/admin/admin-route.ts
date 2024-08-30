@@ -14,7 +14,10 @@ const projectRoot = process.cwd();
 export const adminRouter = express.Router();
 
 // adminRouter.use("/", express.static(path.join(__dirname, "../admin-page")));
-adminRouter.use("/", express.static(path.join(projectRoot, "public/admin-page")));
+adminRouter.use(
+	"/",
+	express.static(path.join(projectRoot, "public/admin-page")),
+);
 
 adminRouter.get("/aaa", (req, res) => {
 	res.status(200).send("Admin!");
