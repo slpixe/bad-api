@@ -40,6 +40,11 @@ export function initializeWebSocket(httpServer: Server): void {
 	io.on("connection", (socket) => {
 		console.log("=socket.io connected");
 
+		socket.on('message', (msg) => {
+			console.log('Message received:', msg);
+			socket.emit('response', 'Message received on the server!');
+		});
+
 		// Send initial state to the client
 		// for (const [id, value] of Object.entries(elementStates)) {
 		//     socket.emit('elementUpdate', { id, value, type: typeof value });

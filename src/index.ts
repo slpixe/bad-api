@@ -25,29 +25,32 @@ app.use(express.json());
 // 	//agent: process.env.HTTP_PROXY ? new HttpsProxyAgent(process.env.HTTP_PROXY) : undefined,
 // });
 
-app.use(
-	'/ws',
-	createProxyMiddleware({
-		target: "http://localhost:3001", // WebSocket server address
-		changeOrigin: true,
-		ws: true,
-
-		// onProxyReqWs: (proxyReq) => {
-		// 	// Optional: Add any custom headers if necessary
-		// 	proxyReq.setHeader('Origin', 'http://localhost:3000'); // or your origin
-		// },
-		// logger: ,
-	}),
-);
+// const wsProxy = createProxyMiddleware({
+// 	target: "http://localhost:3001", // WebSocket server address
+// 	changeOrigin: true,
+// 	ws: true,
+// 	pathRewrite: {
+// 		'^/ws': '',  // This ensures that requests to /ws are correctly proxied to the WebSocket server
+// 	},
+// 	// logLevel: "debug", // Optional: for logging the proxy requests
+// });
+//
+// app.use("/ws", wsProxy);
 
 app.use("/admin", adminRouter);
 app.use("/settings", settingsRouter);
 app.use("/", otherRoutes);
 
-app.listen(port, () => {
+// const thing = app.listen(port, () => {
+// 	console.log(`[server]: Server is running at http://localhost:${port}`);
+// });
+
+// httpServer.listen(3001, () => {
+// 	console.log("[server]: Server is running at http://localhost:3001");
+// });
+
+httpServer.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
-httpServer.listen(3001, () => {
-	console.log("[server]: Server is running at http://localhost:3001");
-});
+// thing.on("upgrade", wsProxy.upgrade);

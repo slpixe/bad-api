@@ -23,8 +23,7 @@
 <input type="checkbox" id="checkbox1">
 <input type="text" id="textInput1">
 
-<!--<script src="http://localhost:3001/socket.io/socket.io.js"></script>-->
-<script src="/ws/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
     // Debounce function
     function debounce(func, delay) {
@@ -71,11 +70,7 @@
         }
     }
 
-    // const socket = io();
-    const socket = io('http://localhost:3001');
-    // const socket = io('/ws', {
-    //     path: '/ws/socket.io/'
-    // });
+    const socket = io();
 
     // Track the client-side and server-side values
     // const state = {
@@ -114,6 +109,17 @@
     // elements.forEach(element => {
     //     syncElement(element);
     // });
+
+    socket.on('connect', () => {
+        console.log('Connected to WebSocket server');
+    });
+
+    socket.on('message', (data) => {
+        console.log('Message from server:', data);
+    });
+
+    // Send a message to the server
+    socket.emit('message', 'Hello from client');
 
     // Listen for updates from server
     socket.on('settingsSync', (updatedSettings) => {
