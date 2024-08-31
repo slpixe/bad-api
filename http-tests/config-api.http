@@ -1,0 +1,24 @@
+###
+# Updates a single configuration setting in the system.
+# This request sends a JSON object with a `name` and `value` to be updated or created.
+PUT http://localhost:3000/config-api
+Content-Type: application/json
+
+{
+  "name": "newKey",
+  "value": "newValue"
+}
+###
+
+# Updates multiple configuration settings in the system at once.
+# This request sends a JSON object with an array of configurations, each containing `name` and `value` pairs.
+PUT http://localhost:3000/config-api
+Content-Type: application/json
+
+{
+  "config": [
+    { "name": "newKeys1", "value": "newValues1" },
+    { "name": "newKeys2", "value": "newValues2" }
+  ]
+}
+###

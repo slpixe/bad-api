@@ -1,0 +1,34 @@
+###
+# Fetches data from the "good" endpoint, which is expected to return a successful response (status 200).
+GET http://localhost:3000/api/good
+###
+
+# Fetches data from the "bad-client" endpoint, which is expected to simulate a client-side error (status 4xx).
+GET http://localhost:3000/api/bad-client
+###
+
+# Fetches data from the "bad-server" endpoint, which is expected to simulate a server-side error (status 5xx).
+GET http://localhost:3000/api/bad-server
+###
+
+# Fetches data from the "error" endpoint, which is expected to return a generic error response.
+GET http://localhost:3000/api/error
+###
+
+# Fetches JSON-formatted data from the "json" endpoint, likely returning a standard JSON object.
+GET http://localhost:3000/api/json
+###
+
+# This request is commented out and will not run.
+# It was meant to fetch a JSON string from the "json-string" endpoint.
+# Uncomment to use.
+# GET http://localhost:3000/json-string
+###
+
+# Fetches data from the "jsonp" endpoint, expected to return JSONP-formatted data (JSON with padding).
+GET http://localhost:3000/api/jsonp
+###
+
+# Fetches data from the "rand-error" endpoint, which is expected to randomly return either a successful or error response.
+GET http://localhost:3000/api/rand-error
+###

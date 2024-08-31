@@ -1,0 +1,10 @@
+###
+# Fetches configuration data from the "aaa" endpoint.
+# This might be used to retrieve specific settings or parameters related to "aaa".
+GET http://localhost:3000/config/aaa
+###
+
+# Fetches the config page from the "config" endpoint.
+# This request is expected to return a html page
+GET http://localhost:3000/config
+###

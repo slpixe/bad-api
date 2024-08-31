@@ -14,7 +14,9 @@ unexpected—because in the wild, APIs rarely behave perfectly.
 ## Routes
 
 - `/api` - Our Bad API endpoints
-- `/admin` - 
+- `/config` - Configuration of the `/api` endpoint
+- `/demo` - Some example endpoints which demonstrate the bad responses that could come from a bad api
 
 ## `/api/`
 
+- `GET /good` - returns a 200 ok response
