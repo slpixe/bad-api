@@ -1,39 +1,39 @@
-// settings.ts
+// config.ts
 
-type Settings = {
+type Config = {
 	version: string;
 	quote: string;
 	networkDelay: number;
 	[key: string]: string | number;
 };
 
-class SettingsStore {
-	private static instance: SettingsStore;
-	private readonly settings: Settings;
+class ConfigStore {
+	private static instance: ConfigStore;
+	private readonly config: Config;
 
 	// Private constructor to prevent direct instantiation
-	private constructor(initialSettings: Settings) {
-		this.settings = { ...initialSettings };
+	private constructor(initialConfig: Config) {
+		this.config = { ...initialConfig };
 	}
 
 	/**
-	 * Provides access to the singleton instance of the SettingsStore.
+	 * Provides access to the singleton instance of the ConfigStore.
 	 * Initializes the instance if it doesn't exist.
 	 */
 	public static getInstance(
-		instanceInitialSettings: Settings = initialSettings,
-	): SettingsStore {
-		if (!SettingsStore.instance) {
-			SettingsStore.instance = new SettingsStore(instanceInitialSettings);
+		instanceInitialConfig: Config = initialConfig,
+	): ConfigStore {
+		if (!ConfigStore.instance) {
+			ConfigStore.instance = new ConfigStore(instanceInitialConfig);
 		}
-		return SettingsStore.instance;
+		return ConfigStore.instance;
 	}
 
 	/**
-	 * Returns a clone of the current settings to avoid external mutations.
+	 * Returns a clone of the current config to avoid external mutations.
 	 */
-	getSettings(): Settings {
-		return { ...this.settings };
+	getConfig(): Config {
+		return { ...this.config };
 	}
 
 	/**
@@ -43,34 +43,34 @@ class SettingsStore {
 	 * @param value - The new value for the setting.
 	 */
 	updateSetting(name: string, value: string | number): void {
-		if (!(name in this.settings)) {
+		if (!(name in this.config)) {
 			//throw new Error(`Setting '${name}' not found`);
 		}
 
-		this.settings[name] = value;
+		this.config[name] = value;
 		console.log(`Updated setting '${name}' to:`, value);
 	}
 
 	/**
-	 * Updates multiple settings.
+	 * Updates multiple config.
 	 * If any setting does not exist, an error is thrown.
 	 * @param updates - Array of objects containing the setting name and new value.
 	 */
-	updateSettings(updates: { name: string; value: string | number }[]): void {
+	updateConfig(updates: { name: string; value: string | number }[]): void {
 		for (const { name, value } of updates) {
 			this.updateSetting(name, value);
 		}
 	}
 }
 
-// Initial settings can be customized as needed.
-export const initialSettings: Settings = {
+// Initial config can be customized as needed.
+export const initialConfig: Config = {
 	version: "v1",
 	quote: "yep that",
 	networkDelay: 500,
 	networkDelayChance: 0.5,
-	// other settings...
+	// other config...
 };
 
 // Export the singleton instance for use across the application
-export const settingsStore = SettingsStore.getInstance(initialSettings);
+export const configStore = ConfigStore.getInstance(initialConfig);

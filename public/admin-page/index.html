@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Page - Settings</title>
+    <title>Admin Page - Config</title>
 </head>
 <body>
-<h1>Admin page - Settings</h1>
+<h1>Admin page - Config</h1>
 
-<form id="settingsForm">
+<form id="configForm">
     <fieldset>
-        <legend>Network Settings</legend>
+        <legend>Network Config</legend>
         <div style="display: flex;">
             <label for="networkDelay">Network Delay (seconds):</label>
             <input style="flex-grow: 1;" type="range" id="networkDelay" name="networkDelay" required min="0"
@@ -99,7 +99,7 @@
     //         const value = element.type === 'checkbox' ? el.checked : el.value;
     //         state[`${element.id}Client`] = value; // Save the client-side value
     //         // socket.emit('elementChanged', { id: element.id, value });
-    //         socket.emit('settingsChanged', { id: element.id, value });
+    //         socket.emit('configChanged', { id: element.id, value });
     //     }, 300); // Adjust the delay as necessary
     //
     //     el.addEventListener(element.event, emitChange);
@@ -122,11 +122,11 @@
     socket.emit('message', 'Hello from client');
 
     // Listen for updates from server
-    socket.on('settingsSync', (updatedSettings) => {
+    socket.on('configSync', (updatedConfig) => {
         // Update the state with server values
-        console.log('=settingsSync', updatedSettings);
+        console.log('=configSync', updatedConfig);
 
-        for (const [id, value] of Object.entries(updatedSettings)) {
+        for (const [id, value] of Object.entries(updatedConfig)) {
             state[`${id}Client`] = value;
             state[`${id}Server`] = value;
 
@@ -161,15 +161,15 @@
             console.log('=new client state', state);
             checkAndDisplayStatus();
 
-            // Emit all the updated client-side settings to the server
-            const clientSettings = {};
+            // Emit all the updated client-side config to the server
+            const clientConfig = {};
             for (const key in state) {
                 if (key.endsWith('Client')) {
                     const id = key.replace('Client', '');
-                    clientSettings[id] = state[key];
+                    clientConfig[id] = state[key];
                 }
             }
-            socket.emit('settingsSync', clientSettings);
+            socket.emit('configSync', clientConfig);
         }, 300); // Adjust the delay as necessary
 
         el.addEventListener(element.event, emitChange);

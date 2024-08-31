@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
-import { settingsStore } from "../settings/settings.js";
+import { configStore } from "../config/config.js";
 
 export const networkDelayMiddleware = () => {
 	return (req: Request, res: Response, next: NextFunction) => {
-		const delayMS = settingsStore.getSettings().networkDelay;
+		const delayMS = configStore.getConfig().networkDelay;
 		console.log("=networkDelayMiddleware - start", delayMS);
 		setTimeout(() => {
 			console.log("=networkDelayMiddleware - finished", delayMS);

@@ -1,8 +1,8 @@
-// settings/settings-route.ts
+// config/config-route.ts
 import express, { type Request, type Response } from "express";
-import { settingsStore } from "./settings.js";
+import { configStore } from "./config.js";
 
-const settingsRouter = express.Router();
+const configRouter = express.Router();
 
 export function handleExpressError(res: Response, error: unknown) {
 	if (error instanceof Error) {
@@ -20,36 +20,36 @@ export function handleError(error: unknown) {
 	}
 }
 
-settingsRouter.get("/", (req: Request, res: Response) => {
-	const latestSettings = settingsStore.getSettings();
-	res.status(200).send({ settings: latestSettings });
+configRouter.get("/", (req: Request, res: Response) => {
+	const latestConfig = configStore.getConfig();
+	res.status(200).send({ config: latestConfig });
 });
 
-settingsRouter.put("/", (req: Request, res: Response) => {
+configRouter.put("/", (req: Request, res: Response) => {
 	console.log("=req.body", typeof req.body, req.body);
 
-	const { name, value, settings } = req.body;
-	console.log("=name, value, settings", name, value, settings);
+	const { name, value, config } = req.body;
+	console.log("=name, value, config", name, value, config);
 
 	try {
-		if (settings && Array.isArray(settings)) {
-			// Update multiple settings
-			settingsStore.updateSettings(settings);
+		if (config && Array.isArray(config)) {
+			// Update multiple config
+			configStore.updateConfig(config);
 			res.status(200).json({
-				message: "Settings updated successfully",
-				settings: settingsStore.getSettings(),
+				message: "Config updated successfully",
+				config: configStore.getConfig(),
 			});
 		} else if (name && value !== undefined) {
 			// Update a single setting
-			settingsStore.updateSetting(name, value);
+			configStore.updateSetting(name, value);
 			res.status(200).json({
 				message: `Setting '${name}' updated successfully`,
-				settings: settingsStore.getSettings(),
+				config: configStore.getConfig(),
 			});
 		} else {
 			res.status(400).json({
 				message:
-					"Invalid request. Provide either a single setting or an array of settings.",
+					"Invalid request. Provide either a single setting or an array of config.",
 			});
 		}
 	} catch (error: unknown) {
@@ -57,4 +57,4 @@ settingsRouter.put("/", (req: Request, res: Response) => {
 	}
 });
 
-export { settingsRouter };
+export { configRouter };

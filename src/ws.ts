@@ -8,8 +8,8 @@
 
 import type { Server } from "node:http";
 import { Server as WsServer } from "socket.io";
-import { handleError } from "./settings/settings-route.js";
-import { settingsStore } from "./settings/settings.js";
+import { handleError } from "./config/config-route.js";
+import { configStore } from "./config/config.js";
 
 type ElementStates = {
 	checkbox1: boolean;
@@ -45,25 +45,25 @@ export function initializeWebSocket(httpServer: Server): void {
 			socket.emit("response", "Message received on the server!");
 		});
 
-		// Send all settings to the client on connection
-		const allSettings = settingsStore.getSettings();
-		socket.emit("settingsSync", allSettings);
+		// Send all config to the client on connection
+		const allConfig = configStore.getConfig();
+		socket.emit("configSync", allConfig);
 
 		// Handle the 'disconnect' event more efficiently
 		socket.on("disconnect", () => {
 			console.log("=socket.io disconnected");
 		});
 
-		// Handle 'settingsChanged' event from the client
+		// Handle 'configChanged' event from the client
 		socket.on(
-			"settingsSync",
-			(updatedSettings: { [key: string]: string | number }) => {
-				console.log("Received settings from client:", updatedSettings);
+			"configSync",
+			(updatedConfig: { [key: string]: string | number }) => {
+				console.log("Received config from client:", updatedConfig);
 
-				// Update the settings in the store
+				// Update the config in the store
 				try {
-					settingsStore.updateSettings(
-						Object.entries(updatedSettings).map(([name, value]) => ({
+					configStore.updateConfig(
+						Object.entries(updatedConfig).map(([name, value]) => ({
 							name,
 							value,
 						})),
@@ -72,10 +72,10 @@ export function initializeWebSocket(httpServer: Server): void {
 					handleError(error);
 				}
 
-				// Broadcast the updated settings back to the client
-				const allSettings = settingsStore.getSettings();
+				// Broadcast the updated config back to the client
+				const allConfig = configStore.getConfig();
 				setTimeout(() => {
-					io.emit("settingsSync", allSettings);
+					io.emit("configSync", allConfig);
 				}, 500);
 			},
 		);

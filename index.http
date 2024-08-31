@@ -4,23 +4,23 @@
 
 ###
 
-GET localhost:3000/good
+GET localhost:3000/api/good
 
 ###
 
-GET localhost:3000/bad-client
+GET localhost:3000/api/bad-client
 
 ###
 
-GET localhost:3000/bad-server
+GET localhost:3000/api/bad-server
 
 ###
 
-GET localhost:3000/error
+GET localhost:3000/api/error
 
 ###
 
-GET localhost:3000/json
+GET localhost:3000/api/json
 
 ###
 
@@ -28,21 +28,21 @@ GET localhost:3000/json
 
 ###
 
-GET localhost:3000/jsonp
+GET localhost:3000/api/jsonp
 
 ###
 
-GET localhost:3000/rand-error
+GET localhost:3000/api/rand-error
 
 ###
 
 GET localhost:3000/admin/aaa
 
-### GET settings
-GET localhost:3000/settings
+### GET config
+GET localhost:3000/config
 
 ### PUT single setting
-PUT localhost:3000/settings
+PUT localhost:3000/config
 Content-Type: application/json
 
 {
@@ -51,11 +51,11 @@ Content-Type: application/json
 }
 
 ### PUT multiple setting
-PUT localhost:3000/settings
+PUT localhost:3000/config
 Content-Type: application/json
 
 {
-  "settings": [
+  "config": [
     { "name": "newKeys1", "value": "newValues1" },
     { "name": "newKeys2", "value": "newValues2" }
   ]

@@ -5,7 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import { adminRouter } from "./admin/admin-route.js";
 import { otherRoutes } from "./other-routes.js";
-import { settingsRouter } from "./settings/settings-route.js";
+import { configRouter } from "./config/config-route.js";
 import { initializeWebSocket } from "./ws.js";
 
 const app = express();
@@ -19,9 +19,10 @@ initializeWebSocket(httpServer);
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+app.use("/api", otherRoutes);
+app.use("/config", configRouter);
 app.use("/admin", adminRouter);
-app.use("/settings", settingsRouter);
-app.use("/", otherRoutes);
+// app.use("/demo", {});
 
 httpServer.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`);
