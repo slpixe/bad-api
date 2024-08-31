@@ -1,12 +1,5 @@
-# CORS
+# Bad Api 
+## Embrace the Chaos of Real-World API Interactions
 
-The application needs to deal with CORS because of the websocket server.
+Bad API is intentionally unreliable. It ~~randomly~~ systematically times out, throws errors, responds unpredictably, or even refuses to respond at all. Designed to mimic the messy, imperfect nature of real-world APIs, Bad API challenges developers to build robust, resilient applications that can handle anything thrown their way. Whether you’re learning to code, testing error handling, or stress-testing your system, Bad API is here to help you prepare for the unexpected—because in the wild, APIs rarely behave perfectly.
 
-This is handled by defining a `ENV_VAR` or `Secret` on the hosting provider,
-The hosting provider uses this ENV_VAR and passes it into the CORS setup so that 
-the server will accept requests from the original source
-
-E.g.
-```bash
-CORS_ORIGIN=https://bob-api.bob.dev
-```
