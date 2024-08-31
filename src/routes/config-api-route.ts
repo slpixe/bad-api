@@ -1,6 +1,6 @@
 // config/config-api-route.ts
 import express, { type Request, type Response } from "express";
-import { configStore } from "./config.js";
+import { configStore } from "../store/config.js";
 
 const configApiRouter = express.Router();
 

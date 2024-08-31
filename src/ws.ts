@@ -8,8 +8,8 @@
 
 import type { Server } from "node:http";
 import { Server as WsServer } from "socket.io";
-import { handleError } from "./config-api/config-api-route.js";
-import { configStore } from "./config-api/config.js";
+import { handleError } from "./routes/config-api-route.js";
+import { configStore } from "./store/config.js";
 
 type ElementStates = {
 	checkbox1: boolean;

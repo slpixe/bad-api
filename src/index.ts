@@ -3,9 +3,9 @@
 import { createServer } from "node:http";
 import express from "express";
 import helmet from "helmet";
-import { configRouter } from "./config/config-route.js";
-import { otherRoutes } from "./other-routes.js";
-import { configApiRouter } from "./config-api/config-api-route.js";
+import { configRouter } from "./routes/config-route.js";
+import { apiRoutes } from "./routes/api-routes.js";
+import { configApiRouter } from "./routes/config-api-route.js";
 import { initializeWebSocket } from "./ws.js";
 
 const app = express();
@@ -19,9 +19,9 @@ initializeWebSocket(httpServer);
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-app.use("/api", otherRoutes);
-app.use("/config-api", configApiRouter);
+app.use("/api", apiRoutes);
 app.use("/config", configRouter);
+app.use("/config-api", configApiRouter);
 // app.use("/demo", {});
 
 httpServer.listen(port, () => {
