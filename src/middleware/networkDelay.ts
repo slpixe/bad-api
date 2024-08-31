@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { configStore } from "../config/config.js";
+import { configStore } from "../config-api/config.js";
 
 export const networkDelayMiddleware = () => {
 	return (req: Request, res: Response, next: NextFunction) => {
