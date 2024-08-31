@@ -68,6 +68,7 @@ export const initialSettings: Settings = {
 	version: "v1",
 	quote: "yep that",
 	networkDelay: 500,
+	networkDelayChance: 0.5,
 	// other settings...
 };
 

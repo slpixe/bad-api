@@ -14,7 +14,7 @@ const httpServer = createServer(app);
 
 initializeWebSocket(httpServer);
 
-app.use(helmet());
+// app.use(helmet());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
