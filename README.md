@@ -19,4 +19,18 @@ unexpected—because in the wild, APIs rarely behave perfectly.
 
 ## `/api/`
 
-- `GET /good` - returns a 200 ok response
+- `GET /good` - Returns a 200 OK response, indicating a successful operation with expected data.
+
+- `GET /bad-client` - Simulates a client-side error (status 4xx), such as 400 Bad Request or 404 Not Found, to test client error handling.
+
+- `GET /bad-server` - Simulates a server-side error (status 5xx), such as 500 Internal Server Error, to test server error handling.
+
+- `GET /error` - Returns a generic error response, used for testing general error scenarios.
+
+- `GET /json` - Returns JSON-formatted data, typically a standard JSON object, for testing standard JSON responses.
+
+[//]: # (- `GET /json-string` - &#40;Currently commented out&#41; Intended to return a JSON string response. Uncomment in `api.http` to test.)
+
+- `GET /jsonp` - Returns JSONP-formatted data (JSON with padding), used for testing JSONP response formats.
+
+- `GET /rand-error` - Randomly returns either a successful response or an error, used for testing unpredictable error conditions.
