@@ -15,6 +15,16 @@ const httpServer = createServer(app);
 initializeWebSocket(httpServer);
 
 // app.use(helmet());
+app.use(
+	helmet({
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: ["'self'"],
+				scriptSrc: ["'self'", "'unsafe-inline'"],
+			},
+		},
+	})
+);
 
 // Middleware to parse JSON bodies
 app.use(express.json());
