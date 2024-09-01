@@ -7,6 +7,7 @@ import { configRouter } from "./routes/config-route.js";
 import { apiRoutes } from "./routes/api-routes.js";
 import { configApiRouter } from "./routes/config-api-route.js";
 import { initializeWebSocket } from "./ws.js";
+import {assetsRouter} from "./routes/assets-route.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use(helmet());
 app.use(express.json());
 
 app.use("/api", apiRoutes);
+app.use("/assets", assetsRouter);
 app.use("/config", configRouter);
 app.use("/config-api", configApiRouter);
 // app.use("/demo", {});
