@@ -1,5 +1,5 @@
-// networkDelayMiddleware.test.ts
-import { describe, it, beforeEach, afterEach, vi, expect } from 'vitest';
+// src/middleware/networkDelayMiddleware.test.ts
+import { describe, it, beforeEach, afterEach, vi, expect, type Mock } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
 import { networkDelayMiddleware } from './networkDelayMiddleware.js';
 import { configStore } from '../store/config.js';
@@ -10,9 +10,6 @@ vi.mock('../store/config.js', () => ({
 		getConfig: vi.fn(),
 	},
 }));
-
-// Mock setTimeout for better control over timing in tests
-// vi.useFakeTimers();
 
 describe('networkDelayMiddleware', () => {
 	let req: Partial<Request>;
@@ -36,7 +33,7 @@ describe('networkDelayMiddleware', () => {
 
 	it('should apply the network delay when the chance condition is met', () => {
 		// Mock the configuration to have a 100% chance of applying delay
-		(configStore.getConfig as vi.Mock).mockReturnValue({
+		(configStore.getConfig as Mock).mockReturnValue({
 			networkDelay: 500,
 			networkDelayChance: 1.0, // 100% chance
 		});
@@ -57,7 +54,7 @@ describe('networkDelayMiddleware', () => {
 
 	it('should not apply the network delay when the chance condition is not met', () => {
 		// Mock the configuration to have a 0% chance of applying delay
-		(configStore.getConfig as vi.Mock).mockReturnValue({
+		(configStore.getConfig as Mock).mockReturnValue({
 			networkDelay: 500,
 			networkDelayChance: 0.0, // 0% chance
 		});
@@ -75,7 +72,7 @@ describe('networkDelayMiddleware', () => {
 
 	it('should handle random chance correctly for variable outcomes', () => {
 		// Mock the configuration with a 50% chance of applying delay
-		(configStore.getConfig as vi.Mock).mockReturnValue({
+		(configStore.getConfig as Mock).mockReturnValue({
 			networkDelay: 500,
 			networkDelayChance: 0.5, // 50% chance
 		});
