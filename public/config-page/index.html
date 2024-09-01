@@ -17,6 +17,12 @@
             <span id="networkDelayValue">?</span> seconds
             <span id="networkDelayStatus"></span> <!-- Status indicator -->
         </div>
+        <div style="display: flex;">
+            <label for="networkDelayChance">Network Delay Chance (%):</label>
+            <input style="flex-grow: 1;" type="range" id="networkDelayChance" name="networkDelayChance" required min="0" max="1" step="0.1">
+            <span id="networkDelayChanceValue">?</span> <!-- Display percentage value -->
+            <span id="networkDelayChanceStatus"></span> <!-- Status indicator -->
+        </div>
     </fieldset>
 </form>
 
@@ -37,7 +43,10 @@
 
     function formatMillisecondsToSeconds(ms) {
         return (ms / 1000).toFixed(2)
-        // document.getElementById('networkDelayValue').innerText = seconds;
+    }
+
+    function formatToPercentage(value) {
+        return (value * 100).toFixed(0) + '%';
     }
 
     // // Example of updating the status indicator
@@ -67,26 +76,27 @@
             if (element.id === 'networkDelay') {
                 document.getElementById('networkDelayValue').textContent = formatMillisecondsToSeconds(state[`${element.id}Client`]);
             }
+
+            if (element.id === 'networkDelayChance') {
+                document.getElementById('networkDelayChanceValue').textContent = formatToPercentage(state[`${element.id}Client`]);
+            }
         }
     }
 
     const socket = io();
 
-    // Track the client-side and server-side values
+    /*
+    Will be like the following during update:
     // const state = {
-    //     networkDelayClient: null,
-    //     networkDelayServer: null,
-    //     checkbox1Client: null,
-    //     checkbox1Server: null,
-    //     textInput1Client: null,
-    //     textInput1Server: null,
-    // };
-
+    //     networkDelayClient: 1200,
+    //     networkDelayServer: 500,
+     */
     const state = {};
 
     // Elements to sync
     const elements = [
         {id: 'networkDelay', event: 'input', type: 'range'},
+        {id: 'networkDelayChance', event: 'input', type: 'range'},
         {id: 'checkbox1', event: 'change', type: 'checkbox'},
         {id: 'textInput1', event: 'input', type: 'text'}
     ];
