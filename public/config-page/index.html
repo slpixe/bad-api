@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Config Page</title>
     <link rel="stylesheet" href="/assets/simple.css"/>
+    <link rel="stylesheet" href="./config-page.css"/>
 </head>
 <body>
 <h1>Config page</h1>
@@ -11,33 +12,28 @@
 <form id="configForm">
     <fieldset>
         <legend>Network Config</legend>
-        <div style="display: flex; flex-direction: column;">
-            <div class="stuff" style="display: flex; justify-content: space-between">
+        <div class="config-section">
+            <div class="config-item">
                 <label for="networkDelay">Network Delay (seconds):</label>
                 <div>
                     <span id="networkDelayValue">?</span> seconds
                     <span id="networkDelayStatus"></span> <!-- Status indicator -->
                 </div>
             </div>
-            <input style="flex-grow: 1;" type="range" id="networkDelay" name="networkDelay" required min="0"
-                   max="45000">
+            <input class="range-input" type="range" id="networkDelay" name="networkDelay" required min="0" max="45000">
         </div>
-        <div style="display: flex; flex-direction: column;">
-            <div class="stuff" style="display: flex; justify-content: space-between">
+        <div class="config-section">
+            <div class="config-item">
                 <label for="networkDelayChance">Network Delay Chance (%):</label>
                 <div>
                     <span id="networkDelayChanceValue">?</span> <!-- Display percentage value -->
                     <span id="networkDelayChanceStatus"></span> <!-- Status indicator -->
                 </div>
             </div>
-            <input style="flex-grow: 1;" type="range" id="networkDelayChance" name="networkDelayChance" required min="0"
-                   max="1" step="0.1">
+            <input class="range-input" type="range" id="networkDelayChance" name="networkDelayChance" required min="0" max="1" step="0.1">
         </div>
     </fieldset>
 </form>
-
-<input type="checkbox" id="checkbox1">
-<input type="text" id="textInput1">
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="./config-page.js"></script>

@@ -1,0 +1,13 @@
+.config-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.range-input {
+    flex-grow: 1;
+}
