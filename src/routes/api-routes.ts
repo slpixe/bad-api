@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from "express";
 import { jsonPayload } from "../store/json.js";
 import { randomErrorMiddleware } from "../middleware/other-middleware.js";
-import { networkDelayMiddleware } from "../middleware/networkDelay.js";
+import { networkDelayMiddleware } from "../middleware/networkDelayMiddleware.js";
 import { configStore } from "../store/config.js";
 
 export const apiRoutes = express.Router();

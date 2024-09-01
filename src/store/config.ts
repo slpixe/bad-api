@@ -4,6 +4,7 @@ type Config = {
 	version: string;
 	quote: string;
 	networkDelay: number;
+	networkDelayChance: number;
 	[key: string]: string | number;
 };
 
@@ -67,7 +68,7 @@ class ConfigStore {
 export const initialConfig: Config = {
 	version: "v1",
 	quote: "yep that",
-	networkDelay: 500,
+	networkDelay: 2000,
 	networkDelayChance: 0.5,
 	// other config...
 };
