@@ -14,7 +14,8 @@
     "biome:formatlint": "biome check ./src",
     "biome:formatlint:write": "biome check --write ./src",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test:units": "node --experimental-strip-types --test './src/**/*.test.*'"
   },
   "author": "",
   "license": "ISC",
