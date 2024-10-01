@@ -49,8 +49,9 @@ body {
     padding: 20px;
 }
 
+/*.api-section,*/
 /* API, Request, Response sections */
-.api-section, .request-section, .response-section {
+.request-section, .response-section {
     text-align: center;
 }
 
