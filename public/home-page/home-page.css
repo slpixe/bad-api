@@ -1,9 +1,5 @@
 /* Define button active state variables for indigo buttons */
 :root {
-    --bs-btn-active-color: #fff; /* White text when active */
-    --bs-btn-active-bg: var(--bs-indigo); /* Indigo background when active */
-    --bs-btn-active-border-color: var(--bs-indigo); /* Indigo border when active */
-
     --bs-purple-100: #e2d9f3;
     --bs-purple-200: #c5b3e6;
     --bs-purple-300: #a98eda;
@@ -13,8 +9,8 @@
     --bs-purple-700: #432874;
     --bs-purple-800: #2c1a4d;
     --bs-purple-900: #160d27;
-
     --bs-indigo-100: #e0cffc;
+
     --bs-indigo-200: #c29ffa;
     --bs-indigo-300: #a370f7;
     --bs-indigo-400: #8540f5;
@@ -23,6 +19,13 @@
     --bs-indigo-700: #3d0a91;
     --bs-indigo-800: #290661;
     --bs-indigo-900: #140330;
+
+    --bs-btn-active-color: #fff; /* White text when active */
+    --bs-btn-active-bg: var(--bs-indigo); /* Indigo background when active */
+    --bs-btn-active-border-color: var(--bs-indigo); /* Indigo border when active */
+
+    --bs-link-color: var(--bs-indigo);
+    --bs-link-hover-color: var(--bs-indigo);
 }
 
 .btn {
@@ -70,7 +73,6 @@ h1, h2, h3, h4, h5, h6 {
 /* Text link styling */
 .text-link {
     display: block;
-    color: var(--bs-indigo);
     margin: 10px 0;
     text-decoration: none;
 }
@@ -84,7 +86,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
 }
 
-/* Status bar */
+/* Status code */
 .status-bar {
     background-color: #e0f7fa;
     border-radius: 8px;
