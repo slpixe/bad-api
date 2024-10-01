@@ -1,4 +1,35 @@
-/* Set background image placeholder */
+/* Define button active state variables for indigo buttons */
+:root {
+    --bs-btn-active-color: #fff; /* White text when active */
+    --bs-btn-active-bg: var(--bs-indigo); /* Indigo background when active */
+    --bs-btn-active-border-color: var(--bs-indigo); /* Indigo border when active */
+
+    --bs-purple-100: #e2d9f3;
+    --bs-purple-200: #c5b3e6;
+    --bs-purple-300: #a98eda;
+    --bs-purple-400: #8c68cd;
+    --bs-purple-500: #6f42c1;
+    --bs-purple-600: #59359a;
+    --bs-purple-700: #432874;
+    --bs-purple-800: #2c1a4d;
+    --bs-purple-900: #160d27;
+
+    --bs-indigo-100: #e0cffc;
+    --bs-indigo-200: #c29ffa;
+    --bs-indigo-300: #a370f7;
+    --bs-indigo-400: #8540f5;
+    --bs-indigo-500: #6610f2;
+    --bs-indigo-600: #520dc2;
+    --bs-indigo-700: #3d0a91;
+    --bs-indigo-800: #290661;
+    --bs-indigo-900: #140330;
+}
+
+.btn {
+    --bs-btn-bg: #e0cffc;
+}
+
+/* Set background image */
 body {
     background-image: url('wallpaper.webp');
     background-size: cover;
@@ -10,6 +41,7 @@ body {
     align-items: center;
 }
 
+/* Main container styling */
 .main-container {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
@@ -17,23 +49,27 @@ body {
     padding: 20px;
 }
 
+/* API, Request, Response sections */
 .api-section, .request-section, .response-section {
     text-align: center;
 }
 
+/* Card styling */
 .card {
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Headings with Bootstrap grey */
 h1, h2, h3, h4, h5, h6 {
     color: var(--bs-gray-900);
 }
 
+/* Text link styling */
 .text-link {
     display: block;
-    color: var(--bs-indigo); /* Bootstrap indigo */
+    color: var(--bs-indigo);
     margin: 10px 0;
     text-decoration: none;
 }
@@ -42,10 +78,12 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: underline;
 }
 
+/* Input field */
 #api-path {
     width: 100%;
 }
 
+/* Status bar */
 .status-bar {
     background-color: #e0f7fa;
     border-radius: 8px;
@@ -54,6 +92,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 
+/* Response box */
 .response-box {
     background-color: #f8f9fa;
     border-radius: 8px;
@@ -64,14 +103,29 @@ h1, h2, h3, h4, h5, h6 {
     overflow: auto;
 }
 
-/* Use Bootstrap's indigo color */
-.btn-indigo {
-    background-color: var(--bs-indigo); /* Bootstrap indigo */
-    color: white;
-    border-color: var(--bs-indigo);
+/* Button styles using --bs-indigo */
+.btn {
+    border: 2px solid var(--bs-indigo);
+    color: var(--bs-indigo);
+    background-color: white;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.btn-indigo:hover {
-    background-color: darken(var(--bs-indigo), 10%);
-    border-color: darken(var(--bs-indigo), 10%);
+.btn:hover {
+    background-color: var(--bs-indigo);
+    color: white;
+}
+
+/* Selected button state */
+.btn-selected {
+    background-color: var(--bs-indigo);
+    color: white;
+}
+
+/* Disabled button state */
+.btn-disabled {
+    background-color: var(--bs-gray-300);
+    color: var(--bs-gray-600);
+    border-color: var(--bs-gray-300);
+    pointer-events: none;
 }

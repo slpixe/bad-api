@@ -23,10 +23,15 @@
         <!-- Request Section -->
         <div class="col-md-4 request-section">
             <h3>Request</h3>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-indigo" id="get-btn">GET</button>
-                <button type="button" class="btn btn-secondary" id="post-btn">POST</button>
-                <button type="button" class="btn btn-secondary" id="put-btn">PUT</button>
+            <div class="btn-group" role="group" aria-label="Request Method Toggle">
+                <input type="radio" class="btn-check" name="btnradio1" id="get-radio" autocomplete="off" checked>
+                <label class="btn btn-outline-indigo" for="get-radio">GET</label>
+
+                <input type="radio" class="btn-check" name="btnradio1" id="post-radio" autocomplete="off">
+                <label class="btn btn-outline-indigo" for="post-radio">POST</label>
+
+                <input type="radio" class="btn-check" name="btnradio1" id="put-radio" autocomplete="off">
+                <label class="btn btn-outline-indigo" for="put-radio">PUT</label>
             </div>
             <input type="text" id="api-path" class="form-control mt-2" placeholder="/api/demo">
             <button id="send-btn" class="btn btn-indigo mt-2">Send</button>
@@ -35,16 +40,27 @@
         <!-- Response Section -->
         <div class="col-md-4 response-section">
             <h3>Response</h3>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary" id="not-loading-btn">Not Loading</button>
-                <button type="button" class="btn btn-secondary" id="loading-btn">Loading</button>
-                <button type="button" class="btn btn-indigo" id="loaded-btn">Loaded</button>
+            <div class="btn-group" role="group" aria-label="Response Status Toggle">
+                <input type="radio" class="btn-check" name="btnradio2" id="not-loading-radio" autocomplete="off" checked>
+                <label class="btn btn-outline-indigo" for="not-loading-radio">Not Loading</label>
+
+                <input type="radio" class="btn-check" name="btnradio2" id="loading-radio" autocomplete="off">
+                <label class="btn btn-outline-indigo" for="loading-radio">Loading</label>
+
+                <input type="radio" class="btn-check" name="btnradio2" id="loaded-radio" autocomplete="off">
+                <label class="btn btn-outline-indigo" for="loaded-radio">Loaded</label>
             </div>
             <div id="status-code" class="status-bar mt-2">Status Code: 200</div>
-            <div class="btn-group mt-2" role="group">
-                <button type="button" class="btn btn-secondary" id="unknown-ok-btn">Unknown Ok</button>
-                <button type="button" class="btn btn-secondary" id="not-ok-btn">Not Ok</button>
-                <button type="button" class="btn btn-indigo" id="ok-btn">Ok</button>
+
+            <div class="btn-group mt-2" role="group" aria-label="Result Status Toggle">
+                <input type="radio" class="btn-check" name="btnradio3" id="unknown-ok-radio" autocomplete="off" checked>
+                <label class="btn btn-outline-indigo" for="unknown-ok-radio">Unknown Ok</label>
+
+                <input type="radio" class="btn-check" name="btnradio3" id="not-ok-radio" autocomplete="off">
+                <label class="btn btn-outline-indigo" for="not-ok-radio">Not Ok</label>
+
+                <input type="radio" class="btn-check" name="btnradio3" id="ok-radio" autocomplete="off">
+                <label class="btn btn-outline-indigo" for="ok-radio">Ok</label>
             </div>
             <div id="response-text" class="response-box mt-2">{"a": "b"}</div>
         </div>
@@ -52,6 +68,5 @@
 </div>
 
 <script src="/assets/bootstrap.bundle.min.js"></script>
-<script src="./home-page.js"></script>
 </body>
 </html>
