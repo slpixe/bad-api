@@ -1,86 +1,84 @@
-// document.addEventListener("DOMContentLoaded", function() {
-//     // Button states
-//     const getBtn = document.getElementById("get-btn");
-//     const postBtn = document.getElementById("post-btn");
-//     const putBtn = document.getElementById("put-btn");
-//     const sendBtn = document.getElementById("send-btn");
-//
-//     const notLoadingBtn = document.getElementById("not-loading-btn");
-//     const loadingBtn = document.getElementById("loading-btn");
-//     const loadedBtn = document.getElementById("loaded-btn");
-//
-//     const unknownOkBtn = document.getElementById("unknown-ok-btn");
-//     const notOkBtn = document.getElementById("not-ok-btn");
-//     const okBtn = document.getElementById("ok-btn");
-//
-//     const statusCodeElem = document.getElementById("status-code");
-//     const responseTextElem = document.getElementById("response-text");
-//
-//     // Change API request method button states
-//     getBtn.addEventListener("click", function() {
-//         resetMethodButtons();
-//         getBtn.classList.add("btn-primary");
-//     });
-//
-//     postBtn.addEventListener("click", function() {
-//         resetMethodButtons();
-//         postBtn.classList.add("btn-primary");
-//     });
-//
-//     putBtn.addEventListener("click", function() {
-//         resetMethodButtons();
-//         putBtn.classList.add("btn-primary");
-//     });
-//
-//     function resetMethodButtons() {
-//         getBtn.classList.remove("btn-primary");
-//         postBtn.classList.remove("btn-primary");
-//         putBtn.classList.remove("btn-primary");
-//     }
-//
-//     // Change Response status buttons
-//     notLoadingBtn.addEventListener("click", function() {
-//         resetStatusButtons();
-//         notLoadingBtn.classList.add("btn-secondary");
-//     });
-//
-//     loadingBtn.addEventListener("click", function() {
-//         resetStatusButtons();
-//         loadingBtn.classList.add("btn-secondary");
-//     });
-//
-//     loadedBtn.addEventListener("click", function() {
-//         resetStatusButtons();
-//         loadedBtn.classList.add("btn-primary");
-//         statusCodeElem.textContent = "Status Code: 200";
-//     });
-//
-//     function resetStatusButtons() {
-//         notLoadingBtn.classList.remove("btn-primary", "btn-secondary");
-//         loadingBtn.classList.remove("btn-primary", "btn-secondary");
-//         loadedBtn.classList.remove("btn-primary", "btn-secondary");
-//     }
-//
-//     // OK buttons for responses
-//     okBtn.addEventListener("click", function() {
-//         resetResponseButtons();
-//         okBtn.classList.add("btn-primary");
-//         responseTextElem.textContent = '{"a": "b"}';
-//     });
-//
-//     unknownOkBtn.addEventListener("click", function() {
-//         resetResponseButtons();
-//         unknownOkBtn.classList.add("btn-secondary");
-//     });
-//
-//     notOkBtn.addEventListener("click", function() {
-//         resetResponseButtons();
-//         notOkBtn.classList.add("btn-secondary");
-//     });
-//
-//     function resetResponseButtons() {
-//         okBtn.classList.remove("btn-primary");
-//         unknownOkBtn.classList.remove("btn-primary", "btn-secondary");
-//         notOkBtn.classList.remove("btn-primary", "btn-secondary");
-//     }
-// });
+document.addEventListener('DOMContentLoaded', function () {
+    // State management
+    let state = {
+        isLoading: false,
+        statusCode: null,
+        resultStatus: 'not-executed', // Can be 'not-executed', 'ok', or 'not-ok'
+        responseBody: null
+    };
+
+    const apiPathInput = document.getElementById('api-path');
+    const sendButton = document.getElementById('send-btn');
+    const statusCodeDisplay = document.getElementById('status-code');
+    const responseTextDisplay = document.getElementById('response-text');
+    const loadingRadio = document.getElementById('loading-radio');
+    const loadedRadio = document.getElementById('loaded-radio');
+    const notLoadingRadio = document.getElementById('not-loading-radio');
+    const unknownOkRadio = document.getElementById('unknown-ok-radio');
+    const notOkRadio = document.getElementById('not-ok-radio');
+    const okRadio = document.getElementById('ok-radio');
+
+    // Function to update the DOM based on the state
+    function updateDOM() {
+        // Update loading state
+        if (state.isLoading) {
+            loadingRadio.checked = true;
+        } else {
+            notLoadingRadio.checked = true;
+        }
+
+        // Update status code
+        if (state.statusCode !== null) {
+            statusCodeDisplay.textContent = `Status Code: ${state.statusCode}`;
+            loadedRadio.checked = true;
+            loadedRadio.labels[0].textContent = `Loaded (${state.statusCode} ms)`;
+        }
+
+        // Update request result status
+        if (state.resultStatus === 'ok') {
+            okRadio.checked = true;
+        } else if (state.resultStatus === 'not-ok') {
+            notOkRadio.checked = true;
+        } else {
+            unknownOkRadio.checked = true;
+        }
+
+        // Update response body
+        if (state.responseBody !== null) {
+            responseTextDisplay.textContent = JSON.stringify(state.responseBody, null, 2);
+        }
+    }
+
+    // Function to handle the API call
+    async function makeApiCall() {
+        const apiUrl = apiPathInput.placeholder;
+
+        // Set loading state
+        state.isLoading = true;
+        updateDOM();
+
+        try {
+            // Make the API request
+            const response = await fetch(apiUrl);
+            const responseBody = await response.json();
+
+            // Update state based on the response
+            state.isLoading = false;
+            state.statusCode = response.status;
+            state.responseBody = responseBody;
+            state.resultStatus = response.ok ? 'ok' : 'not-ok';
+        } catch (error) {
+            // Handle errors (e.g., network issues)
+            state.isLoading = false;
+            state.statusCode = 500; // Set a generic status code for errors
+            state.responseBody = { error: 'Network Error or Invalid API Path' };
+            state.resultStatus = 'not-ok';
+        }
+
+        // Update the DOM with the final state
+        updateDOM();
+    }
+
+    // Attach the API call to the button click event
+    sendButton.addEventListener('click', makeApiCall);
+});
