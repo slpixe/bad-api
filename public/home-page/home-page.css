@@ -33,7 +33,7 @@ h2, h3 {
 
 .text-link {
     display: block;
-    color: #6f42c1;
+    color: var(--bs-indigo); /* Bootstrap indigo */
     margin: 10px 0;
     text-decoration: none;
 }
@@ -62,4 +62,16 @@ h2, h3 {
     font-family: monospace;
     height: 80px;
     overflow: auto;
+}
+
+/* Use Bootstrap's indigo color */
+.btn-indigo {
+    background-color: var(--bs-indigo); /* Bootstrap indigo */
+    color: white;
+    border-color: var(--bs-indigo);
+}
+
+.btn-indigo:hover {
+    background-color: darken(var(--bs-indigo), 10%);
+    border-color: darken(var(--bs-indigo), 10%);
 }
