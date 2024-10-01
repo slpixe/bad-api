@@ -2,16 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bad API</title>
     <link href="/assets/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./home-page.css">
 </head>
 <body>
-<h1>Home page</h1>
+<div class="container-fluid main-container">
+    <div class="row">
+        <!-- Bad API Section -->
+        <div class="col-md-4 api-section">
+            <div class="card p-4">
+                <h2>Bad API</h2>
+                <p>this is some random text saying random things and stuff</p>
+                <a href="#" class="text-link">Link</a>
+                <a href="#" class="text-link">Another link</a>
+            </div>
+        </div>
+
+        <!-- Request Section -->
+        <div class="col-md-4 request-section">
+            <h3>Request</h3>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" id="get-btn">GET</button>
+                <button type="button" class="btn btn-secondary" id="post-btn">POST</button>
+                <button type="button" class="btn btn-secondary" id="put-btn">PUT</button>
+            </div>
+            <input type="text" id="api-path" class="form-control mt-2" placeholder="/api/demo">
+            <button id="send-btn" class="btn btn-primary mt-2">Send</button>
+        </div>
+
+        <!-- Response Section -->
+        <div class="col-md-4 response-section">
+            <h3>Response</h3>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-secondary" id="not-loading-btn">Not Loading</button>
+                <button type="button" class="btn btn-secondary" id="loading-btn">Loading</button>
+                <button type="button" class="btn btn-primary" id="loaded-btn">Loaded</button>
+            </div>
+            <div id="status-code" class="status-bar mt-2">Status Code: 200</div>
+            <div class="btn-group mt-2" role="group">
+                <button type="button" class="btn btn-secondary" id="unknown-ok-btn">Unknown Ok</button>
+                <button type="button" class="btn btn-secondary" id="not-ok-btn">Not Ok</button>
+                <button type="button" class="btn btn-primary" id="ok-btn">Ok</button>
+            </div>
+            <div id="response-text" class="response-box mt-2">{"a": "b"}</div>
+        </div>
+    </div>
+</div>
 
 <script src="/assets/bootstrap.bundle.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
 <script src="./home-page.js"></script>
 </body>
 </html>

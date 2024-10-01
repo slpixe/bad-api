@@ -1,13 +1,65 @@
-.config-section {
+/* Set background image placeholder */
+body {
+    background-image: url('wallpaper.webp');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    margin: 0;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.config-item {
-    display: flex;
-    justify-content: space-between;
+.main-container {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    padding: 20px;
 }
 
-.range-input {
-    flex-grow: 1;
+.api-section, .request-section, .response-section {
+    text-align: center;
+}
+
+.card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2, h3 {
+    color: #333;
+}
+
+.text-link {
+    display: block;
+    color: #6f42c1;
+    margin: 10px 0;
+    text-decoration: none;
+}
+
+.text-link:hover {
+    text-decoration: underline;
+}
+
+#api-path {
+    width: 100%;
+}
+
+.status-bar {
+    background-color: #e0f7fa;
+    border-radius: 8px;
+    padding: 10px;
+    color: #00796b;
+    font-weight: bold;
+}
+
+.response-box {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    color: #333;
+    font-family: monospace;
+    height: 80px;
+    overflow: auto;
 }
