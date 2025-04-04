@@ -16,9 +16,12 @@ describe('randomErrorMiddleware', () => {
     let next: NextFunction;
 
     beforeEach(() => {
-        req = {};
+        req = {
+            path: '/test-path'
+        };
         res = {
             status: vi.fn().mockReturnThis(),
+            json: vi.fn(),
             send: vi.fn()
         };
         next = vi.fn();
@@ -28,7 +31,7 @@ describe('randomErrorMiddleware', () => {
         vi.clearAllMocks();
     });
 
-    it('should return an error when the random value is below error chance', () => {
+    it('should return a JSON error when the random value is below error chance', () => {
         // Mock config to have 100% chance of error
         (configStore.getConfig as Mock).mockReturnValue({
             errorChance: 1.0 // 100% chance
@@ -42,7 +45,14 @@ describe('randomErrorMiddleware', () => {
         middleware(req as Request, res as Response, next);
 
         expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith('=rand-error Error');
+        expect(res.json).toHaveBeenCalledWith({
+            error: {
+                status: 500,
+                message: "Random server error occurred",
+                code: "RANDOM_ERROR",
+                path: '/test-path'
+            }
+        });
         expect(next).not.toHaveBeenCalled();
     });
 
@@ -60,7 +70,7 @@ describe('randomErrorMiddleware', () => {
         middleware(req as Request, res as Response, next);
 
         expect(res.status).not.toHaveBeenCalled();
-        expect(res.send).not.toHaveBeenCalled();
+        expect(res.json).not.toHaveBeenCalled();
         expect(next).toHaveBeenCalled();
     });
 
@@ -75,11 +85,19 @@ describe('randomErrorMiddleware', () => {
         const middleware = randomErrorMiddleware();
         middleware(req as Request, res as Response, next);
         expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({
+            error: {
+                status: 500,
+                message: "Random server error occurred",
+                code: "RANDOM_ERROR",
+                path: '/test-path'
+            }
+        });
 
         // Reset mocks
         vi.clearAllMocks();
         res.status = vi.fn().mockReturnThis();
-        res.send = vi.fn();
+        res.json = vi.fn();
 
         // Then test with random value above 0.5
         vi.spyOn(Math, 'random').mockReturnValue(0.6);
