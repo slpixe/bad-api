@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
         isLoading: false,
         statusCode: null,
         resultStatus: 'not-executed', // Can be 'not-executed', 'ok', or 'not-ok'
-        responseBody: null
+        responseBody: null,
+        duration: null
     };
 
     const apiPathInput = document.getElementById('api-path');
@@ -28,11 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
             notLoadingRadio.checked = true;
         }
 
-        // Update status code
+        // Update status code and duration
         if (state.statusCode !== null) {
             statusCodeDisplay.textContent = `Status Code: ${state.statusCode}`;
             loadedRadio.checked = true;
-            loadedRadio.labels[0].textContent = `Loaded (${state.statusCode} ms)`;
+            loadedRadio.labels[0].textContent = state.duration !== null ? `Loaded (${state.duration} ms)` : 'Loaded';
         }
 
         // Update request result status
@@ -56,7 +57,8 @@ document.addEventListener('DOMContentLoaded', function () {
             isLoading: false,
             statusCode: null,
             resultStatus: 'not-executed',
-            responseBody: null
+            responseBody: null,
+            duration: null
         };
         statusCodeDisplay.textContent = 'Status Code: ';
         responseTextDisplay.textContent = '{}';
@@ -75,10 +77,14 @@ document.addEventListener('DOMContentLoaded', function () {
         state.isLoading = true;
         updateDOM();
 
+        const startTime = performance.now();
+        
         try {
             // Make the API request
             const response = await fetch(apiUrl);
             const responseBody = await response.json();
+            
+            state.duration = Math.round(performance.now() - startTime);
 
             // Update state based on the response
             state.isLoading = false;
@@ -86,6 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
             state.responseBody = responseBody;
             state.resultStatus = response.ok ? 'ok' : 'not-ok';
         } catch (error) {
+            state.duration = Math.round(performance.now() - startTime);
+            
             // Handle errors (e.g., network issues)
             state.isLoading = false;
             state.statusCode = 500; // Set a generic status code for errors
