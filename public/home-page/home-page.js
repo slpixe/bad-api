@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update loading state
         if (state.isLoading) {
             loadingRadio.checked = true;
+            loadedRadio.labels[0].textContent = 'Loaded';
         } else {
             notLoadingRadio.checked = true;
         }
@@ -33,7 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (state.statusCode !== null) {
             statusCodeDisplay.textContent = `Status Code: ${state.statusCode}`;
             loadedRadio.checked = true;
-            loadedRadio.labels[0].textContent = state.duration !== null ? `Loaded (${state.duration} ms)` : 'Loaded';
+            if (state.duration !== null) {
+                loadedRadio.labels[0].textContent = `Loaded (${state.duration} ms)`;
+            }
         }
 
         // Update request result status
