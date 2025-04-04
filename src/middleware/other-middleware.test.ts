@@ -37,7 +37,9 @@ describe('randomErrorMiddleware', () => {
         // Mock random to ensure error condition
         vi.spyOn(Math, 'random').mockReturnValue(0.4);
 
-        randomErrorMiddleware(req as Request, res as Response, next);
+        // Create middleware instance and call it
+        const middleware = randomErrorMiddleware();
+        middleware(req as Request, res as Response, next);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalledWith('=rand-error Error');
@@ -53,7 +55,9 @@ describe('randomErrorMiddleware', () => {
         // Mock random to ensure success condition
         vi.spyOn(Math, 'random').mockReturnValue(0.6);
 
-        randomErrorMiddleware(req as Request, res as Response, next);
+        // Create middleware instance and call it
+        const middleware = randomErrorMiddleware();
+        middleware(req as Request, res as Response, next);
 
         expect(res.status).not.toHaveBeenCalled();
         expect(res.send).not.toHaveBeenCalled();
@@ -68,7 +72,8 @@ describe('randomErrorMiddleware', () => {
 
         // First test with random value below 0.5
         vi.spyOn(Math, 'random').mockReturnValue(0.4);
-        randomErrorMiddleware(req as Request, res as Response, next);
+        const middleware = randomErrorMiddleware();
+        middleware(req as Request, res as Response, next);
         expect(res.status).toHaveBeenCalledWith(500);
 
         // Reset mocks
@@ -78,7 +83,7 @@ describe('randomErrorMiddleware', () => {
 
         // Then test with random value above 0.5
         vi.spyOn(Math, 'random').mockReturnValue(0.6);
-        randomErrorMiddleware(req as Request, res as Response, next);
+        middleware(req as Request, res as Response, next);
         expect(next).toHaveBeenCalled();
     });
 });

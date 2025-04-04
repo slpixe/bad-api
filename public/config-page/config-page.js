@@ -18,15 +18,6 @@ function formatToPercentage(value) {
     return (value * 100).toFixed(0) + '%';
 }
 
-// // Example of updating the status indicator
-// function updateStatusIndicator(id, isSuccess) {
-//     const statusEl = document.getElementById(`${id}Status`);
-//     if (statusEl) {
-//         console.log('=aaa', id, isSuccess);
-//         statusEl.textContent = isSuccess ? '✔️' : '❌';
-//     }
-// }
-
 // Check client and server values and update status indicators
 function checkAndDisplayStatus() {
     for (const element of elements) {
@@ -46,8 +37,8 @@ function checkAndDisplayStatus() {
             document.getElementById('networkDelayValue').textContent = formatMillisecondsToSeconds(state[`${element.id}Client`]);
         }
 
-        if (element.id === 'networkDelayChance') {
-            document.getElementById('networkDelayChanceValue').textContent = formatToPercentage(state[`${element.id}Client`]);
+        if (element.id === 'networkDelayChance' || element.id === 'errorChance') {
+            document.getElementById(`${element.id}Value`).textContent = formatToPercentage(state[`${element.id}Client`]);
         }
     }
 }
@@ -66,28 +57,10 @@ const state = {};
 const elements = [
     {id: 'networkDelay', event: 'input', type: 'range'},
     {id: 'networkDelayChance', event: 'input', type: 'range'},
+    {id: 'errorChance', event: 'input', type: 'range'},
     {id: 'checkbox1', event: 'change', type: 'checkbox'},
     {id: 'textInput1', event: 'input', type: 'text'}
 ];
-
-// // Function to sync element value with server
-// function syncElement(element) {
-//     const el = document.getElementById(element.id);
-//
-//     const emitChange = debounce(() => {
-//         const value = element.type === 'checkbox' ? el.checked : el.value;
-//         state[`${element.id}Client`] = value; // Save the client-side value
-//         // socket.emit('elementChanged', { id: element.id, value });
-//         socket.emit('configChanged', { id: element.id, value });
-//     }, 300); // Adjust the delay as necessary
-//
-//     el.addEventListener(element.event, emitChange);
-// }
-
-// // Initialize all elements to sync
-// elements.forEach(element => {
-//     syncElement(element);
-// });
 
 socket.on('connect', () => {
     console.log('Connected to WebSocket server');
@@ -116,9 +89,6 @@ socket.on('configSync', (updatedConfig) => {
                 el.checked = value;
             } else {
                 el.value = value;
-                // if (id === 'networkDelay') {
-                //     document.getElementById('networkDelayValue').textContent = value;
-                // }
             }
         }
     }

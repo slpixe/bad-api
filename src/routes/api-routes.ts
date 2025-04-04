@@ -6,7 +6,9 @@ import { configStore } from "../store/config.js";
 
 export const apiRoutes = express.Router();
 
+// Add both global middleware
 apiRoutes.use(networkDelayMiddleware());
+apiRoutes.use(randomErrorMiddleware());
 
 apiRoutes.get("/", (req: Request, res: Response) => {
 	res.status(200).send("hmmm");
@@ -43,7 +45,6 @@ apiRoutes.get("/redirect", (req: Request, res: Response) => {
 	res.redirect("/new-location");
 });
 
-apiRoutes.use("/rand-error", randomErrorMiddleware);
 apiRoutes.get("/rand-error", (req: Request, res: Response) => {
 	res.status(200).send({ status: 200, message: "=rand-error successful" });
 });
