@@ -68,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
     async function makeApiCall() {
         const apiUrl = apiPathInput.placeholder;
 
+        // Reset state before making the call
+        resetState();
+
         // Set loading state
         state.isLoading = true;
         updateDOM();
