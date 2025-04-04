@@ -4,20 +4,22 @@ import express, {
 	type Response,
 	type NextFunction,
 } from "express";
-
-// export const randomTimeout = (req: Request, res: Response, next: NextFunction) => {
-//     console.log('=aa');
-//     next();
-// }
+import { configStore } from "../store/config.js";
 
 export const randomErrorMiddleware = (
 	req: Request,
 	res: Response,
 	next: NextFunction,
 ) => {
-	if (Math.random() < 0.5) {
+	const config = configStore.getConfig();
+	const errorChance = config.errorChance; // e.g., 0.5 for 50%
+
+	// Decide whether to return an error based on the configured chance
+	if (Math.random() < errorChance) {
+		console.log("=randomErrorMiddleware - returning error");
 		res.status(500).send("=rand-error Error");
 	} else {
+		console.log("=randomErrorMiddleware - continuing");
 		next();
 	}
 };

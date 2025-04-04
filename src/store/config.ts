@@ -5,6 +5,7 @@ type Config = {
 	quote: string;
 	networkDelay: number;
 	networkDelayChance: number;
+	errorChance: number;
 	[key: string]: string | number;
 };
 
@@ -70,6 +71,7 @@ export const initialConfig: Config = {
 	quote: "yep that",
 	networkDelay: 2000,
 	networkDelayChance: 0.5,
+	errorChance: 0.5,
 	// other config...
 };
 
