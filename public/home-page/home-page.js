@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const apiPathInput = document.getElementById('api-path');
     const sendButton = document.getElementById('send-btn');
+    const clearButton = document.getElementById('clear-btn');
     const statusCodeDisplay = document.getElementById('status-code');
     const responseTextDisplay = document.getElementById('response-text');
     const loadingRadio = document.getElementById('loading-radio');
@@ -49,6 +50,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to reset the state
+    function resetState() {
+        state = {
+            isLoading: false,
+            statusCode: null,
+            resultStatus: 'not-executed',
+            responseBody: null
+        };
+        statusCodeDisplay.textContent = 'Status Code: ';
+        responseTextDisplay.textContent = '{}';
+        loadedRadio.labels[0].textContent = 'Loaded';
+        updateDOM();
+    }
+
     // Function to handle the API call
     async function makeApiCall() {
         const apiUrl = apiPathInput.placeholder;
@@ -81,4 +96,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Attach the API call to the button click event
     sendButton.addEventListener('click', makeApiCall);
+    clearButton.addEventListener('click', resetState);
 });
