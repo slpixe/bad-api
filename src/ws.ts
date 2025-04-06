@@ -10,6 +10,7 @@ import type { Server } from "node:http";
 import { Server as WsServer } from "socket.io";
 import { handleError } from "./routes/config-api-route.js";
 import { configStore } from "./store/config.js";
+import { refreshDynamicRoutes } from "./routes/api-routes.js";
 
 type ElementStates = {
 	checkbox1: boolean;
@@ -79,5 +80,35 @@ export function initializeWebSocket(httpServer: Server): void {
 				}, 500);
 			},
 		);
+
+		// Handle adding a new dynamic route
+		socket.on("addDynamicRoute", (routeData: { path: string, payload?: any }) => {
+			console.log("Adding dynamic route:", routeData);
+			try {
+				configStore.addDynamicRoute(routeData.path, routeData.payload);
+				// Re-register all dynamic routes 
+				refreshDynamicRoutes();
+				// Broadcast the updated config back to all clients
+				io.emit("configSync", configStore.getConfig());
+			} catch (error: unknown) {
+				handleError(error);
+				socket.emit("error", { message: "Failed to add dynamic route" });
+			}
+		});
+
+		// Handle removing a dynamic route
+		socket.on("removeDynamicRoute", (routePath: string) => {
+			console.log("Removing dynamic route:", routePath);
+			try {
+				configStore.removeDynamicRoute(routePath);
+				// Re-register all dynamic routes
+				refreshDynamicRoutes();
+				// Broadcast the updated config back to all clients
+				io.emit("configSync", configStore.getConfig());
+			} catch (error: unknown) {
+				handleError(error);
+				socket.emit("error", { message: "Failed to remove dynamic route" });
+			}
+		});
 	});
 }

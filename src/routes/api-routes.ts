@@ -10,6 +10,26 @@ export const apiRoutes = express.Router();
 apiRoutes.use(networkDelayMiddleware());
 apiRoutes.use(randomErrorMiddleware());
 
+// Function to register dynamic routes from config
+const registerDynamicRoutes = () => {
+    const dynamicRoutes = configStore.getDynamicRoutes();
+    
+    dynamicRoutes.forEach(route => {
+        console.log(`Registering dynamic route: ${route.path}`);
+        apiRoutes.get(route.path, (req: Request, res: Response) => {
+            // For now, return the default jsonPayload or route-specific payload if available
+            const responseData = route.payload || jsonPayload;
+            res.json(responseData);
+        });
+    });
+};
+
+// Initial registration of dynamic routes
+registerDynamicRoutes();
+
+// Export the function to allow re-registration when routes are updated
+export const refreshDynamicRoutes = registerDynamicRoutes;
+
 apiRoutes.get("/", (req: Request, res: Response) => {
 	res.status(200).send("hmmm");
 });

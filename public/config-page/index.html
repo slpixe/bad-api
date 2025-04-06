@@ -47,6 +47,23 @@
             <input class="range-input" type="range" id="errorChance" name="errorChance" required min="0" max="1" step="0.1">
         </div>
     </fieldset>
+
+    <fieldset>
+        <legend>Dynamic API Routes</legend>
+        <div class="config-section">
+            <div class="dynamic-routes-container">
+                <div class="route-input-container">
+                    <input type="text" id="newRoutePath" placeholder="Route path (e.g., /example)">
+                    <button type="button" id="addRouteBtn">Add Route</button>
+                </div>
+                <div class="routes-list-container">
+                    <ul id="dynamicRoutesList">
+                        <!-- Routes will be populated here dynamically -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </fieldset>
 </form>
 
 <script src="/socket.io/socket.io.js"></script>

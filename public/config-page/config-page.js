@@ -79,22 +79,33 @@ socket.on('configSync', (updatedConfig) => {
     console.log('=configSync', updatedConfig);
 
     for (const [id, value] of Object.entries(updatedConfig)) {
-        state[`${id}Client`] = value;
-        state[`${id}Server`] = value;
+        if (id === 'dynamicRoutes') {
+            // Handle dynamic routes separately
+            updateDynamicRoutesList(value);
+        } else {
+            state[`${id}Client`] = value;
+            state[`${id}Server`] = value;
 
-        // Update the UI elements with server values
-        const el = document.getElementById(id);
-        if (el) {
-            if (el.type === 'checkbox') {
-                el.checked = value;
-            } else {
-                el.value = value;
+            // Update the UI elements with server values
+            const el = document.getElementById(id);
+            if (el) {
+                if (el.type === 'checkbox') {
+                    el.checked = value;
+                } else {
+                    el.value = value;
+                }
             }
         }
     }
 
     // Check if client and server values match, and update status indicators
     checkAndDisplayStatus();
+});
+
+// Error handling
+socket.on('error', (error) => {
+    console.error('Socket error:', error);
+    alert(`Error: ${error.message}`);
 });
 
 // Function to sync element value with server
@@ -127,4 +138,74 @@ function initElements(element) {
 // Initialize all elements to sync
 elements.forEach(element => {
     initElements(element);
+});
+
+// Dynamic Routes handling
+function updateDynamicRoutesList(routes) {
+    const routesList = document.getElementById('dynamicRoutesList');
+    routesList.innerHTML = ''; // Clear existing routes
+
+    if (Array.isArray(routes)) {
+        routes.forEach(route => {
+            const listItem = document.createElement('li');
+            listItem.className = 'route-item';
+            
+            const routePath = document.createElement('span');
+            routePath.textContent = route.path;
+            routePath.className = 'route-path';
+            
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'delete-route-btn';
+            deleteButton.onclick = () => removeRoute(route.path);
+            
+            listItem.appendChild(routePath);
+            listItem.appendChild(deleteButton);
+            
+            routesList.appendChild(listItem);
+        });
+    }
+}
+
+// Add a new route
+function addRoute() {
+    const routePathInput = document.getElementById('newRoutePath');
+    const routePath = routePathInput.value.trim();
+    
+    if (!routePath) {
+        alert('Please enter a valid route path');
+        return;
+    }
+    
+    // Ensure path starts with /
+    const formattedPath = routePath.startsWith('/') ? routePath : `/${routePath}`;
+    
+    socket.emit('addDynamicRoute', { path: formattedPath });
+    routePathInput.value = ''; // Clear input field
+}
+
+// Remove a route
+function removeRoute(routePath) {
+    if (confirm(`Are you sure you want to delete the route: ${routePath}?`)) {
+        socket.emit('removeDynamicRoute', routePath);
+    }
+}
+
+// Initialize event listeners for dynamic routes
+document.addEventListener('DOMContentLoaded', function() {
+    const addRouteBtn = document.getElementById('addRouteBtn');
+    if (addRouteBtn) {
+        addRouteBtn.addEventListener('click', addRoute);
+    }
+    
+    // Add Enter key support for the new route input
+    const newRouteInput = document.getElementById('newRoutePath');
+    if (newRouteInput) {
+        newRouteInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submission
+                addRoute();
+            }
+        });
+    }
 });
