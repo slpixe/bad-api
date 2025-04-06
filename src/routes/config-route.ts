@@ -8,11 +8,19 @@ const projectRoot = process.cwd();
 
 export const configRouter = express.Router();
 
+// Serve the built React app
 configRouter.use(
-	"/",
-	express.static(path.join(projectRoot, "public/config-page")),
+  "/",
+  express.static(path.join(projectRoot, "client/config/dist")),
 );
 
-configRouter.get("/aaa", (req, res) => {
-	res.status(200).send("Config!");
+// Serve the assets (including simple.css)
+configRouter.use(
+  "/assets",
+  express.static(path.join(projectRoot, "client/config/public/assets")),
+);
+
+// Fallback route for client-side routing
+configRouter.get("*", (req, res) => {
+  res.sendFile(path.join(projectRoot, "client/config/dist/index.html"));
 });

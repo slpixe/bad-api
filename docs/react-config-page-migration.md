@@ -74,45 +74,45 @@ flowchart TD
 
 ## TODO List
 
-- [ ] **Vite & TypeScript Setup**
-  - [ ] Create a new client directory (e.g., `/client/config`) for the React config page.
-  - [ ] Install dependencies: React, ReactDOM, Vite, and TypeScript.
-  - [ ] Create and configure `vite.config.ts` for React and TypeScript.
-  - [ ] Update `package.json` scripts for development and build.
-  - [ ] Verify the development server starts without errors.
-  - [ ] Test that TypeScript compilation works correctly.
-  - [ ] Ensure hot module reloading is functioning.
+- [x] **Vite & TypeScript Setup**
+  - [x] Create a new client directory (e.g., `/client/config`) for the React config page.
+  - [x] Install dependencies: React, ReactDOM, Vite, and TypeScript.
+  - [x] Create and configure `vite.config.ts` for React and TypeScript.
+  - [x] Update `package.json` scripts for development and build.
+  - [x] Verify the development server starts without errors.
+  - [x] Test that TypeScript compilation works correctly.
+  - [x] Ensure hot module reloading is functioning.
 
-- [ ] **Asset Migration**
-  - [ ] Create `ConfigPage.tsx` as the entry React component.
-  - [ ] Convert static HTML from `public/config-page/index.html` into JSX (TypeScript).
-  - [ ] Refactor and modularize CSS from `public/config-page/config-page.css`.
-  - [ ] Organize static images and other assets within the component directory.
-  - [ ] Create TypeScript interfaces for component props.
-  - [ ] Set up CSS modules or styled-components configuration.
-  - [ ] Test that all components render correctly.
+- [x] **Asset Migration**
+  - [x] Create `ConfigPage.tsx` as the entry React component.
+  - [x] Convert static HTML from `public/config-page/index.html` into JSX (TypeScript).
+  - [x] Refactor and modularize CSS from `public/config-page/config-page.css`.
+  - [x] Organize static images and other assets within the component directory.
+  - [x] Create TypeScript interfaces for component props.
+  - [x] Set up CSS modules or styled-components configuration.
+  - [x] Test that all components render correctly.
 
-- [ ] **Websocket Integration**
-  - [ ] Develop a React hook or context in TypeScript for managing websocket state.
-  - [ ] Create TypeScript interfaces for websocket message types.
-  - [ ] Integrate the hook/context into the config page component to provide real-time data.
-  - [ ] Test websocket connection and state updates.
+- [x] **Websocket Integration**
+  - [x] Develop a React hook or context in TypeScript for managing websocket state.
+  - [x] Create TypeScript interfaces for websocket message types.
+  - [x] Integrate the hook/context into the config page component to provide real-time data.
+  - [x] Test websocket connection and state updates.
   - [ ] Implement error handling and reconnection logic.
-  - [ ] Verify real-time updates work as expected.
+  - [x] Verify real-time updates work as expected.
 
-- [ ] **Express Integration**
-  - [ ] Modify `/config` route in `src/routes/config-route.ts` to serve the Vite build output.
-  - [ ] Verify that all client-side routes and static assets load correctly.
-  - [ ] Test the production build process.
+- [x] **Express Integration**
+  - [x] Modify `/config` route in `src/routes/config-route.ts` to serve the Vite build output.
+  - [x] Verify that all client-side routes and static assets load correctly.
+  - [x] Test the production build process.
   - [ ] Configure proper error handling and fallbacks.
   - [ ] Ensure proper caching headers are set.
-  - [ ] Verify that the Express server correctly handles all routes.
+  - [x] Verify that the Express server correctly handles all routes.
 
 - [ ] **Testing & Deployment**
   - [ ] Implement unit tests for React components.
   - [ ] Add integration tests for websocket functionality.
-  - [ ] Test the full application flow end-to-end.
-  - [ ] Verify production build optimization.
+  - [x] Test the full application flow end-to-end.
+  - [x] Verify production build optimization.
   - [ ] Document any necessary deployment steps.
   - [ ] Create backup of current static implementation.
   - [ ] Plan rollback strategy if needed.
