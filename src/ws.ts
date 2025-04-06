@@ -13,102 +13,84 @@ import { configStore } from "./store/config.js";
 import { refreshDynamicRoutes } from "./routes/api-routes.js";
 
 type ElementStates = {
-	checkbox1: boolean;
-	textInput1: string;
-	networkDelay: number;
+  checkbox1: boolean;
+  textInput1: string;
+  networkDelay: number;
 };
 
 export function initializeWebSocket(httpServer: Server): void {
-	const io = new WsServer(httpServer, {});
+  const io = new WsServer(httpServer, {});
 
-	io.on("connection", (socket) => {
-		console.log("=socket.io connected");
+  io.on("connection", (socket) => {
+    console.log("=socket.io connected");
 
-		//
-		// Respond to connection
-		socket.emit("welcome", { message: "Welcome to the WebSocket server!" });
+    // Send welcome message
+    socket.emit("welcome", { message: "Welcome to the WebSocket server!" });
 
-		// Listen for a simple message event
-		socket.on("message", (data) => {
-			console.log("Received message:", data);
-			// Respond back to the client
-			socket.emit("message_response", { message: "Message received", data });
-		});
+    // Send initial config to the client
+    const allConfig = configStore.getConfig();
+    socket.emit("configSync", allConfig);
 
-		// Disconnect event
-		socket.on("disconnect", () => {
-			console.log("User disconnected");
-		});
-		//
+    // Listen for config updates
+    socket.on("configSync", (updates: { [key: string]: any }) => {
+      console.log("Received config update:", updates);
 
-		socket.on("message", (msg) => {
-			console.log("Message received:", msg);
-			socket.emit("response", "Message received on the server!");
-		});
+      try {
+        // Convert updates object to array of name/value pairs
+        const updateArray = Object.entries(updates).map(([name, value]) => ({
+          name,
+          value
+        }));
 
-		// Send all config to the client on connection
-		const allConfig = configStore.getConfig();
-		socket.emit("configSync", allConfig);
+        // Update the config store
+        configStore.updateConfig(updateArray);
 
-		// Handle the 'disconnect' event more efficiently
-		socket.on("disconnect", () => {
-			console.log("=socket.io disconnected");
-		});
+        // Get the updated config and broadcast to all clients
+        const currentConfig = configStore.getConfig();
+        io.emit("configSync", currentConfig);
 
-		// Handle 'configChanged' event from the client
-		socket.on(
-			"configSync",
-			(updatedConfig: { [key: string]: string | number }) => {
-				console.log("Received config from client:", updatedConfig);
+      } catch (error: unknown) {
+        console.error("Error updating config:", error);
+        handleError(error);
+        socket.emit("error", { message: "Failed to update configuration" });
+      }
+    });
 
-				// Update the config in the store
-				try {
-					configStore.updateConfig(
-						Object.entries(updatedConfig).map(([name, value]) => ({
-							name,
-							value,
-						})),
-					);
-				} catch (error: unknown) {
-					handleError(error);
-				}
+    // Handle adding a new dynamic route
+    socket.on("addDynamicRoute", (routeData: { path: string, payload?: any }) => {
+      console.log("Adding dynamic route:", routeData);
+      try {
+        configStore.addDynamicRoute(routeData.path, routeData.payload);
+        refreshDynamicRoutes();
+        
+        // Broadcast updated config to all clients
+        const currentConfig = configStore.getConfig();
+        io.emit("configSync", currentConfig);
+      } catch (error: unknown) {
+        handleError(error);
+        socket.emit("error", { message: "Failed to add dynamic route" });
+      }
+    });
 
-				// Broadcast the updated config back to the client
-				const allConfig = configStore.getConfig();
-				setTimeout(() => {
-					io.emit("configSync", allConfig);
-				}, 500);
-			},
-		);
+    // Handle removing a dynamic route
+    socket.on("removeDynamicRoute", (routePath: string) => {
+      console.log("Removing dynamic route:", routePath);
+      try {
+        configStore.removeDynamicRoute(routePath);
+        refreshDynamicRoutes();
+        
+        // Broadcast updated config to all clients
+        const currentConfig = configStore.getConfig();
+        io.emit("configSync", currentConfig);
+      } catch (error: unknown) {
+        handleError(error);
+        socket.emit("error", { message: "Failed to remove dynamic route" });
+      }
+    });
 
-		// Handle adding a new dynamic route
-		socket.on("addDynamicRoute", (routeData: { path: string, payload?: any }) => {
-			console.log("Adding dynamic route:", routeData);
-			try {
-				configStore.addDynamicRoute(routeData.path, routeData.payload);
-				// Re-register all dynamic routes 
-				refreshDynamicRoutes();
-				// Broadcast the updated config back to all clients
-				io.emit("configSync", configStore.getConfig());
-			} catch (error: unknown) {
-				handleError(error);
-				socket.emit("error", { message: "Failed to add dynamic route" });
-			}
-		});
-
-		// Handle removing a dynamic route
-		socket.on("removeDynamicRoute", (routePath: string) => {
-			console.log("Removing dynamic route:", routePath);
-			try {
-				configStore.removeDynamicRoute(routePath);
-				// Re-register all dynamic routes
-				refreshDynamicRoutes();
-				// Broadcast the updated config back to all clients
-				io.emit("configSync", configStore.getConfig());
-			} catch (error: unknown) {
-				handleError(error);
-				socket.emit("error", { message: "Failed to remove dynamic route" });
-			}
-		});
-	});
+    // Handle disconnection
+    socket.on("disconnect", () => {
+      console.log("=socket.io disconnected");
+    });
+  });
 }

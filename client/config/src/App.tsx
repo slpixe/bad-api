@@ -10,6 +10,7 @@ interface ConfigState {
   networkDelay: number;
   errorChance: number;
   dynamicRoutes: string[];
+  [key: string]: any;
 }
 
 export const App: React.FC = () => {
@@ -22,26 +23,74 @@ export const App: React.FC = () => {
   });
 
   useEffect(() => {
-    const newSocket = io();
-    setSocket(newSocket);
-
-    newSocket.on('connect', () => {
-      console.log('Connected to server');
-      newSocket.emit('getConfig');
+    // Connect to WebSocket server
+    console.log('Initializing WebSocket connection...');
+    const newSocket = io({
+      path: '/socket.io',
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
-    newSocket.on('config', (data: ConfigState) => {
+    newSocket.on('connect', () => {
+      console.log('✅ Connected to WebSocket server');
+    });
+
+    newSocket.on('welcome', (data) => {
+      console.log('📩 Received welcome:', data);
+    });
+
+    newSocket.on('configSync', (data: ConfigState) => {
+      console.log('📩 Received config update:', data);
       setConfig(data);
     });
 
+    newSocket.on('error', (error) => {
+      console.error('❌ WebSocket error:', error);
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('❌ Disconnected from WebSocket server');
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('❌ Connection error:', error);
+    });
+
+    setSocket(newSocket);
+
+    // Cleanup on unmount
     return () => {
+      console.log('Closing WebSocket connection...');
       newSocket.close();
     };
   }, []);
 
   const updateConfig = (updates: Partial<ConfigState>) => {
     if (socket) {
-      socket.emit('updateConfig', updates);
+      console.log('📤 Sending config update:', updates);
+      socket.emit('configSync', updates);
+    } else {
+      console.warn('⚠️ Cannot send update: WebSocket not connected');
+    }
+  };
+
+  const addDynamicRoute = (path: string) => {
+    if (socket) {
+      console.log('📤 Adding dynamic route:', path);
+      socket.emit('addDynamicRoute', { path });
+    } else {
+      console.warn('⚠️ Cannot add route: WebSocket not connected');
+    }
+  };
+
+  const removeDynamicRoute = (path: string) => {
+    if (socket) {
+      console.log('📤 Removing dynamic route:', path);
+      socket.emit('removeDynamicRoute', path);
+    } else {
+      console.warn('⚠️ Cannot remove route: WebSocket not connected');
     }
   };
 
@@ -68,21 +117,15 @@ export const App: React.FC = () => {
         />
 
         <DynamicRoutes
-          onAddRoute={(path) =>
-            updateConfig({
-              dynamicRoutes: [...config.dynamicRoutes, path],
-            })
-          }
-          onDeleteRoute={(path) =>
-            updateConfig({
-              dynamicRoutes: config.dynamicRoutes.filter(
-                (route) => route !== path
-              ),
-            })
-          }
+          onAddRoute={addDynamicRoute}
+          onDeleteRoute={removeDynamicRoute}
           initialRoutes={config.dynamicRoutes}
         />
       </form>
+
+      <div style={{ margin: '20px 0', color: '#666' }}>
+        Connection Status: {socket?.connected ? '🟢 Connected' : '🔴 Disconnected'}
+      </div>
     </div>
   );
 };

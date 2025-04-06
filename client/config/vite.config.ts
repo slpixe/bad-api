@@ -7,16 +7,17 @@ export default defineConfig({
   plugins: [react()],
   root: __dirname,
   base: '/config/',
+  server: {
+    middlewareMode: true,
+    proxy: {
+      '/socket.io': {
+        target: 'ws://localhost:3000',
+        ws: true,
+      },
+    },
+  },
   build: {
     outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true
-  },
-  server: {
-    middlewareMode: true,
-    hmr: {
-      host: 'localhost',
-      port: 3000,
-      protocol: 'ws'
-    }
   }
 });
