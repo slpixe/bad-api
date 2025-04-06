@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface ErrorConfigProps {
   onErrorChanceChange: (value: number) => void;
-  initialErrorChance?: number;
+  errorChance: number;      // Changed from initialErrorChance
+  isSyncing?: boolean;      // Added sync status
 }
 
 export const ErrorConfig: React.FC<ErrorConfigProps> = ({
   onErrorChanceChange,
-  initialErrorChance = 0,
+  errorChance,
+  isSyncing = false,
 }) => {
-  const [errorChance, setErrorChance] = useState(initialErrorChance);
-
   const handleErrorChanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
-    setErrorChance(value);
     onErrorChanceChange(value);
   };
 
@@ -25,7 +24,9 @@ export const ErrorConfig: React.FC<ErrorConfigProps> = ({
           <label htmlFor="errorChance">Error Chance (%):</label>
           <div>
             <span id="errorChanceValue">{(errorChance * 100).toFixed(0)}%</span>
-            <span id="errorChanceStatus"></span>
+            <span id="errorChanceStatus" className="sync-status">
+              {isSyncing ? '⏳' : '✅'}
+            </span>
           </div>
         </div>
         <input

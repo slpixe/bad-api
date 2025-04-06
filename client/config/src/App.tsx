@@ -5,12 +5,21 @@ import { ErrorConfig } from './components/ErrorConfig';
 import { DynamicRoutes } from './components/DynamicRoutes';
 import './styles/config-page.css';
 
+interface DynamicRoute {
+  path: string;
+  payload?: any;
+}
+
 interface ConfigState {
   networkDelayChance: number;
   networkDelay: number;
   errorChance: number;
-  dynamicRoutes: string[];
+  dynamicRoutes: DynamicRoute[];
   [key: string]: any;
+}
+
+interface SyncState {
+  [key: string]: boolean;
 }
 
 export const App: React.FC = () => {
@@ -21,6 +30,7 @@ export const App: React.FC = () => {
     errorChance: 0,
     dynamicRoutes: [],
   });
+  const [syncState, setSyncState] = useState<SyncState>({});
 
   useEffect(() => {
     // Connect to WebSocket server
@@ -44,6 +54,8 @@ export const App: React.FC = () => {
     newSocket.on('configSync', (data: ConfigState) => {
       console.log('📩 Received config update:', data);
       setConfig(data);
+      // Clear all sync states when receiving server update
+      setSyncState({});
     });
 
     newSocket.on('error', (error) => {
@@ -70,6 +82,14 @@ export const App: React.FC = () => {
   const updateConfig = (updates: Partial<ConfigState>) => {
     if (socket) {
       console.log('📤 Sending config update:', updates);
+      // Set sync state for updated fields
+      setSyncState(prev => ({
+        ...prev,
+        ...Object.keys(updates).reduce((acc, key) => ({
+          ...acc,
+          [key]: true
+        }), {})
+      }));
       socket.emit('configSync', updates);
     } else {
       console.warn('⚠️ Cannot send update: WebSocket not connected');
@@ -79,6 +99,7 @@ export const App: React.FC = () => {
   const addDynamicRoute = (path: string) => {
     if (socket) {
       console.log('📤 Adding dynamic route:', path);
+      setSyncState(prev => ({ ...prev, dynamicRoutes: true }));
       socket.emit('addDynamicRoute', { path });
     } else {
       console.warn('⚠️ Cannot add route: WebSocket not connected');
@@ -88,6 +109,7 @@ export const App: React.FC = () => {
   const removeDynamicRoute = (path: string) => {
     if (socket) {
       console.log('📤 Removing dynamic route:', path);
+      setSyncState(prev => ({ ...prev, dynamicRoutes: true }));
       socket.emit('removeDynamicRoute', path);
     } else {
       console.warn('⚠️ Cannot remove route: WebSocket not connected');
@@ -105,21 +127,24 @@ export const App: React.FC = () => {
           onNetworkDelayChange={(value) =>
             updateConfig({ networkDelay: value })
           }
-          initialDelayChance={config.networkDelayChance}
-          initialDelay={config.networkDelay}
+          networkDelayChance={config.networkDelayChance}
+          networkDelay={config.networkDelay}
+          isSyncing={syncState.networkDelayChance || syncState.networkDelay}
         />
 
         <ErrorConfig
           onErrorChanceChange={(value) =>
             updateConfig({ errorChance: value })
           }
-          initialErrorChance={config.errorChance}
+          errorChance={config.errorChance}
+          isSyncing={syncState.errorChance}
         />
 
         <DynamicRoutes
           onAddRoute={addDynamicRoute}
           onDeleteRoute={removeDynamicRoute}
-          initialRoutes={config.dynamicRoutes}
+          routes={config.dynamicRoutes}
+          isSyncing={syncState.dynamicRoutes}
         />
       </form>
 

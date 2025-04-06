@@ -1,35 +1,23 @@
 import React, { useState } from 'react';
 
+interface DynamicRoute {
+  path: string;
+  payload?: any;
+}
+
 interface DynamicRoutesProps {
   onAddRoute: (path: string) => void;
   onDeleteRoute: (path: string) => void;
-  initialRoutes?: string[];
+  routes: DynamicRoute[];
+  isSyncing?: boolean;
 }
-
-interface RouteItemProps {
-  path: string;
-  onDelete: (path: string) => void;
-}
-
-const RouteItem: React.FC<RouteItemProps> = ({ path, onDelete }) => (
-  <li className="route-item">
-    <span className="route-path">{path}</span>
-    <button
-      className="delete-route-btn"
-      onClick={() => onDelete(path)}
-      aria-label={`Delete route ${path}`}
-    >
-      Delete
-    </button>
-  </li>
-);
 
 export const DynamicRoutes: React.FC<DynamicRoutesProps> = ({
   onAddRoute,
   onDeleteRoute,
-  initialRoutes = [],
+  routes,
+  isSyncing = false,
 }) => {
-  const [routes, setRoutes] = useState<string[]>(initialRoutes);
   const [newRoutePath, setNewRoutePath] = useState('');
 
   const handleAddRoute = () => {
@@ -39,22 +27,24 @@ export const DynamicRoutes: React.FC<DynamicRoutesProps> = ({
       ? newRoutePath
       : `/${newRoutePath}`;
 
-    if (!routes.includes(formattedPath)) {
-      setRoutes([...routes, formattedPath]);
+    if (!routes.some(route => route.path === formattedPath)) {
       onAddRoute(formattedPath);
       setNewRoutePath('');
     }
-  };
-
-  const handleDeleteRoute = (path: string) => {
-    setRoutes(routes.filter(route => route !== path));
-    onDeleteRoute(path);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleAddRoute();
+    }
+  };
+
+  const formatPayload = (payload: any): string => {
+    try {
+      return JSON.stringify(payload, null, 2);
+    } catch {
+      return String(payload);
     }
   };
 
@@ -75,17 +65,39 @@ export const DynamicRoutes: React.FC<DynamicRoutesProps> = ({
             <button type="button" onClick={handleAddRoute}>
               Add Route
             </button>
+            <span className="sync-status">
+              {isSyncing ? '⏳' : '✅'}
+            </span>
           </div>
           <div className="routes-list-container">
-            <ul id="dynamicRoutesList">
-              {routes.map((route) => (
-                <RouteItem
-                  key={route}
-                  path={route}
-                  onDelete={handleDeleteRoute}
-                />
-              ))}
-            </ul>
+            {routes.length === 0 ? (
+              <p style={{ color: '#666', fontStyle: 'italic' }}>
+                No dynamic routes configured
+              </p>
+            ) : (
+              <ul id="dynamicRoutesList">
+                {routes.map((route) => (
+                  <li key={route.path} className="route-item">
+                    <span className="route-path" title="Route path">
+                      {route.path}
+                    </span>
+                    {route.payload && (
+                      <code className="route-payload" title="Route payload">
+                        {formatPayload(route.payload)}
+                      </code>
+                    )}
+                    <button
+                      className="delete-route-btn"
+                      onClick={() => onDeleteRoute(route.path)}
+                      aria-label={`Delete route ${route.path}`}
+                      title="Delete route"
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
